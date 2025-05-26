@@ -269,7 +269,7 @@ Main method is executed!
 
 ```
 
-- static on can't be parameterized so overloading of static con is not possible. coz they are implicitly called when they are implictly called we will not have chance to call them explictly so we can't pass parameters.
+- static con can't be parameterized so overloading of static con is not possible. coz they are implicitly called when they are implictly called we will not have chance to call them explictly so we can't pass parameters.
 
 - ### Why constructors are needed in a class:
     -  ![alt text](image-3.png)
@@ -1766,7 +1766,7 @@ declared in Interface2
 ## Structures in C#:
   - Class is a user defined type
   - structures are also user defined type
-  - structures in c# can conatain most of the members what a class can contain like Fileds, Mthods, constructors, properties etc.
+  - structures in c# can conatain most of the members what a class can contain like Fileds, Methods, constructors, properties etc.
   - Defining structure:
 
   <modifier> struct <Name>
@@ -2490,4 +2490,905 @@ Current Cuntry: India
 
 ------------------------------------------------------------------------------------
 
-## Indexes in c#
+## Indexers in c#
+  - It a member of class 
+  - once we define a index in class the class will start working as a virtual array  
+  - When we have a class and there are some vars in the class the class is public so we can create the instance and but we can't access the vars coz they are defaultly private 
+  - by using indexers we can access the vars by convering the class into an array can access the vars using index
+  - syntax:
+  <modifier> <type> this[<parameter List>]
+  {
+    [get{<stmts>}] // Get Accessor
+    [set{<stmts>}] // Set Accessor
+  }
+  - this is useing tell we are using index on current class
+```c#
+using System;
+namespace IndexerProject
+{
+    public class Employee
+    {
+        int Eno;
+        double Salary;
+        string Ename, Job, Dname, Location;
+        public Employee(int Eno, double Salary, String Ename, string Job,string Dname, string Location)
+        {
+            this.Eno = Eno;
+            this.Salary = Salary;
+            this.Ename = Ename;
+            this.Job = Job;
+            this.Dname = Dname;
+            this.Location = Location;
+        }
+
+        public object this[int index]
+        {
+            get {
+                if(index==0)
+                return Eno;
+                else if (index == 1)
+                 return Salary;
+                else if (index == 2)
+                    return Ename;
+                else if (index == 3)
+                    return Job;
+                else if (index == 4)
+                    return Dname;
+                else if (index == 5)
+                    return Location;
+                return null;
+            }
+
+        }
+
+    }
+}
+
+
+namespace IndexersProject
+{
+     class TestEmployee
+    {
+        static void Main(string[] args)
+        {
+            Employee emp = new Employee(1001,20000.00,"Scott","Manager","Sales","Mumbai");
+            Console.WriteLine("Eno: "+emp[0]);
+            Console.WriteLine("Salary: " + emp[1]);
+            Console.WriteLine("Ename: " + emp[2]);
+            Console.WriteLine("Job: " + emp[3]);
+            Console.WriteLine("Dname: " + emp[4]);
+            Console.WriteLine("Location: " + emp[5]);
+
+
+
+        }
+    }
+}
+
+// output:
+Eno: 1001
+Salary: 20000
+Ename: Scott
+Job: Manager
+Dname: Sales
+Location: Mumbai
+```
+  - the above is only for getting means get accessor
+  - implementing set accessor
+```c#
+set
+{
+    if (index == 0)
+        Eno = (int)value;
+    else if (index == 1)
+        Salary = (double)value;
+    else if(index == 2)
+        Ename = (string)value;
+    else if(index==3)
+        Job= (string)value;
+    else if(index==4)
+        Dname = (string)value;
+    else if(index==5)
+       Location = (string)value;
+}
+
+ emp[1] = 50000.00;
+ Console.WriteLine("Modified Salary: "+emp[1]);
+ // output:
+ Modified Salary: 50000
+ ```
+
+ ---------------------------------------------------------
+ ## Delegates in C#:
+  - Its's a type safe function pointer.
+  - A delegate holds the reference of a method and then calls the method for execution.
+  - we call the method in 2 ways like:
+     - with instance of the method if the method is non-static
+     - by name if the method is static
+     - can also call the method using delegate
+  - To call a method by using a delegate we have 3 steps:
+        1. Define a delegate
+         [<modifier] delegate void|type <Name>([<Parameter List])
+        - return type of delegate should be same as delegate
+        - parameters of delegate should be same as method
+        - public delegate void AddDelegate(int x,int y); // delegate for the AddNums method
+          public void AddNums(int a,int b)
+        - delegate is a userdefined type and its a reference type
+        - we can define the delegate under the class but not suggested define under the namespace
+        2. Instansaction of delegate
+        - AddDelegate ad = new AddDelegate(p.AddNums);
+        - pass the method as the parameter to the delegate
+- ![alt text](image-59.png)
+         3. Callthe delegate by passing required parameter values, so that internally the method which is bound with the delegate gets executed.
+```c#
+namespace DelegatesProject
+{
+    // step-1: defining delegate
+    public delegate void AddDelegate(int x, int y);
+    public delegate string SayDelegate(string s);
+    class Program
+    {
+        public void AddNums(int a, int b)
+        {
+            Console.WriteLine(a + b);
+        }
+        public static string SayHello(string name)
+        {
+            return "Hello " + name;
+        }
+        public static void Main(string[] args)
+        {
+            Program p = new Program();
+            p.AddNums(100, 200);
+            Console.WriteLine(SayHello("Sara"));
+            // calling method using delegates
+            // step-2: Instantating the delegate
+            AddDelegate ad = new AddDelegate(p.AddNums);
+            SayDelegate sd=new SayDelegate(SayHello);
+            // step-3: call the delegate with the params
+            string str = sd("Alia");
+            Console.WriteLine(str);
+            ad(1, 2);
+            // or we can also call delegate like this
+            string str2 = sd.Invoke("Priyanka");
+            Console.WriteLine(str2);
+        }
+    }
+}
+// output: 
+300
+Hello Sara
+Hello Alia
+3
+Hello Priyanka
+```
+
+## MultiCast Delegates:
+   - we can call the static and non-static methods using delegates.
+   -  A delegate holds the refercne of a method
+   -  so multi cast delegate will hold the reference of multiple delegates
+   -  In a class if we have multiple methods with the same signature we can  call all the methods using one delegate
+```c#
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace DelegatesProject
+{
+    public  delegate void RectDelegate(double Width, double Height);
+     class Rectangle
+    {
+        public void GetArea(double Width, double Height)
+        {
+            Console.WriteLine("Area of Rectangle: "+Width * Height);
+        }
+        public void GetPerimeter(double Width, double Height)
+        {
+            Console.WriteLine("Perimeter of Rectangle: "+2*(Width+Height));
+        }
+        static void Main(string[] args)
+        {
+            Rectangle r = new Rectangle();
+            r.GetArea(2.12, 3.68);
+            r.GetPerimeter(2.78, 3.58);
+            RectDelegate r1 = new RectDelegate(r.GetArea);
+            RectDelegate r2 = new RectDelegate(r.GetPerimeter);
+            r1(1, 2);
+            r2(3, 5);
+        }
+    }
+}
+
+// output:
+Area of Rectangle: 7.8016000000000005
+Perimeter of Rectangle: 12.719999999999999
+Area of Rectangle: 2
+Perimeter of Rectangle: 16
+```
+  - so here we are calling the 2 methods with one delegate coz 2 methods have same signature means while initializing the delegate we can pass either of the 2 or the 2 coz it will accept the signature of the declared delegate 
+  - by creating one delegate and instaining 2 delegates we can be able to achieve the multicast delegates
+  - even if i change the access modifier i will work coz , access modifier will not come under method signature
+  -  private void GetPerimeter(double Width, double Height)
+ {
+     Console.WriteLine("Perimeter of Rectangle: "+2*(Width+Height));
+ }
+   - giving same output with the above change also
+   - even if i change the order of parameters also
+   -  private void GetPerimeter(double Height, double Width)
+ {
+     Console.WriteLine("Perimeter of Rectangle: "+2*(Width+Height));
+ }
+   - giving the same output
+
+-----------------------------------------------------------------------------\
+
+##  Anonymous Methods in C#:
+   - In delegates we bind the method with it while inastacating
+   - so anonymous method means binding the unamed method with the delegate or block of code with delegate
+```c#
+
+namespace DelegatesProject
+{
+    public delegate string GettingsDelegate(string name);
+     class AnonymousMethods
+    {
+        public static string Greetings(string name)
+        {
+            return "Hello " + name ;
+        }
+        static void Main(string[] args)
+        {
+            // GettingsDelegate gd = new GettingsDelegate(Greetings);
+            //Console.WriteLine(gd("Sara"));
+            // instead of all the above code we can write like
+
+            GettingsDelegate gd = delegate (string name) // direclty passing a block of code 
+            {
+                return "Hello " + name;
+            };
+            Console.WriteLine(gd("Alia"));
+        }
+    }
+}
+// output :
+Hello Alia
+```
+
+  - a method without a name is called anonymous method which constains only method body
+  - it is only suggested for few lines of code not for large code
+  - the return type of the anonymous method is same as the delegate
+Note: Creating window form app in c#
+- new project-> search for windows form app-> open -> view open toolbox -> drag and drop the buttons or whatever
+- Lets say we added a button to the form and when we i click on this button i should add the another button in the center of the form
+- to generate this when we double click on the button in the form wohtout running it should opens a even handler to write the code
+- so button has to be added dynamically so i can't drag and drop
+- create the instance for button
+```c#
+namespace WinFormsApp
+{
+    public partial class Form1 : Form
+    {
+        public Form1()
+        {
+            InitializeComponent();
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+
+            Button b = new Button(); // creating instance to the button class 
+            b.Text = "Click Me"; // adding the text to the button
+            b.Size = new Size(100,50); //defining the size of the button
+            b.Location = new Point(150, 150); // adding x and y coordinates where the button is located
+            this.Controls.Add(b); // adding the button to the form
+        }
+    }
+}
+
+```
+// output:
+- ![alt text](image-60.png)
+
+- so when i click on the middle button i want to show some text
+- for adding the text in button in the form(place the button at the time of designing) when we double click it will take us to the event handler but how to add for this?
+
+----------------------------------------------------------------------------
+
+## Lambda Expressions:
+  - is a shorthand for writing the anonymous methods
+```c#
+namespace DelegatesProject
+{
+    public delegate string GreetingsDelegate(string name);
+     class LambdaExpressions
+    {
+        //public static string Greetings(string name)
+        //{
+        //    return "Hello " + name+"!";
+        //}
+        static void Main(string[] args)
+        {
+            // without anonymousmmethod
+            //GreetingsDelegate obj = new GreetingsDelegate(Greetings);
+            //Console.WriteLine(obj("sara"));
+            // with anonymous method
+            //GreetingsDelegate obj = delegate (string name)
+            //{
+            //    return "Hello" + name + "!";
+            //};
+            // with lambad expression:
+            GreetingsDelegate obj =  (name)=>
+            {
+                return "Hello " + name + "!";
+            };
+            sConsole.WriteLine(obj("sara"));
+        }
+    }
+}
+// output:
+Hello sara!
+```
+   - In lambad expression we don't need to specify the parameter type coz its already specified in the delegate
+   - Anonmous methods are simplifies by using lambda expressions
+
+-----------------------------------------------------------------
+
+## Func, Action and Predicate Delegates:
+  - ### Generic Delegates:
+     - Predefined Delegates:
+       - func
+       - action
+       - predicate
+
+- example without predefined elegates:
+```c#
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace DelegatesProject
+{
+    class GenericDelegates
+    {
+        public delegate double Delegate1(int x, float y, double z);
+        public delegate void Delegate2(int x, float y, double z);
+        public delegate bool Delegate3(string str);
+
+        public static double AddNums1(int x, float y, double z)
+        {
+            return x + y + z;
+        }
+        public static void AddNums2(int x, float y, double z)
+        {
+            Console.WriteLine( x + y + z);
+        }
+        public static bool CheckLength(string str)
+        {
+            if(str.Length>=5)
+                return true;
+            return false;
+        }
+
+        static void Main(string[] args)
+        {
+            Delegate1 d1 = AddNums1;
+            Console.WriteLine(d1(100,34.5f,12.5768));
+            Delegate2 d2 = AddNums2;
+            d2(12,45.36f,98.364);
+            Delegate3 d3 =CheckLength;
+            Console.WriteLine(d3("Hello"));
+        }
+    }
+}
+
+```
+  - generally a delegate hold the refernce of the method and class the method and till now we have defined the delegate and used them but we have predefined delegates
+  - we have 3 predefined delegates:
+    - func delegate: is used for value returning
+       - Func<int,float,double,double> obj1= AddNums1;
+       - here int, float, doublt are -> inputs and double -> output type
+
+    - action delegate: used for void delegates means it returns nothing
+        -  Action<int, float, double> obj2= AddNums2;
+        - here it retunrs void so the mentioned types in genrics are params types
+
+    - predicate: used for bool return type
+         - Predicate<string> obj3 = CheckLength;
+         - it will return the bool type and input is string
+
+- with predefined delegates:
+
+```c#
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace DelegatesProject
+{
+    class GenericDelegates
+    {
+        //public delegate double Delegate1(int x, float y, double z);
+        //public delegate void Delegate2(int x, float y, double z);
+        //public delegate bool Delegate3(string str);
+
+        public static double AddNums1(int x, float y, double z)
+        {
+            return x + y + z;
+        }
+        public static void AddNums2(int x, float y, double z)
+        {
+            Console.WriteLine( x + y + z);
+        }
+        public static bool CheckLength(string str)
+        {
+            if(str.Length>=5)
+                return true;
+            return false;
+        }
+
+        static void Main(string[] args)
+        {
+            //Delegate1 d1 = AddNums1;
+            //Console.WriteLine(d1(100,34.5f,12.5768));
+            //Delegate2 d2 = AddNums2;
+            //d2(12,45.36f,98.364);
+            //Delegate3 d3 =CheckLength;
+            //Console.WriteLine(d3("Hello"));
+
+            // with predefined delegates:
+            Func<int,float,double,double> obj1= AddNums1;
+            Console.WriteLine(obj1(12,23.56f,123.4645));
+
+            Action<int, float, double> obj2= AddNums2;
+            obj2(10, 12.56f, 53.489);
+
+            Predicate<string> obj3 = CheckLength;
+            Console.WriteLine(obj3("Hello world"));
+        }
+    }
+}
+```
+  - here without defining and instaninting the delegates we are using the predefined delegates
+  - replacing the method with lambda expression
+
+```c#
+     Func<int, float, double, double> obj1 = (x, y, z) =>
+     {
+         return x + y + z;
+     };
+     Console.WriteLine(obj1(11, 12.21f, 25.151));
+
+     Action<int, float, double> obj2 = (x, y, z) =>
+     {
+         Console.WriteLine(x + y + z);
+     };
+     obj2(10, 23.15f, 18.236); 
+
+     Predicate<string> obj3 = (str) =>
+     {
+         if (str.Length >= 5)
+             return true;
+         return false;
+     };
+     Console.WriteLine(obj3("Hello world"));
+
+
+ ```
+  - 
+
+----------------------------------------------------------------
+
+## Extension Methods in C#:
+- This a new feature added in c# 3.0.
+    - Lets say there is a class with 10 methods ex:string class and when we want to add more methods into it we don't have to source code
+    - so when we want to add new methods into class problems are:
+        - Source is not avaible for most of the classes like string
+        - and the class might not have permissions to add new methods
+    - To over come this problem we can use inheritance like defining a new class what ever methods we want can be declared in the child class and we also have the methods in the actual class or we can access them also, for inheriting we don't need the source code and also don't need any permissions to add new methods 
+- ![alt text](image-61.png)
+   - Inheritance is a mechanism using which we can extend the functionalities of a class 
+   - but there are some problems with this also:
+   - 1. If it is a sealed class we can't apply inheritance on it
+   - 2. If it is a structure we can't apply inheritance on it also
+   - 3. we can only call the child and parent cclass methods using child class instance
+   - so to overcome this problem microsoft introduced extension methods
+- # Defination: It's a machenism of adding new methods into an existing class or structure also with out modifying the source code of the original type and we don't require any persmissions from original type and origial type doesn't require any re-compilation.
+    - How to add the methods:
+       1. take one new class and that muts be static
+       2. define the methods in new class
+       3. after that we can bind the 5 methods with the original class/structure
+- ![alt text](image-62.png)
+
+```c#
+using System;
+namespace ExtensionMethodsProject
+{
+    class Program
+    {
+        public void Test1()
+        {
+            Console.WriteLine("Method 1");
+        }
+        public void Test2()
+        {
+            Console.WriteLine("Method 2");
+        }
+        static void Main(string[] args)
+        {
+          Program p= new Program();
+            p.Test1();
+            p.Test2();
+            p.Test3();
+        }
+    }
+}
+
+
+namespace ExtensionMethodsProject
+{
+    static class StatClass
+    {
+        // means the method test3 belongs to the program class
+        public static void Test3(this Program p) // binding the program p with with method
+        {
+            Console.WriteLine("Method 3 ");
+        }
+    }
+}
+
+
+// output:
+Method 1
+Method 2
+Method 3
+```
+
+  - Extension methods are declared as static so we can call them by name of the class but once they are bound with class they will become non-static that's why we are calling it with instance of the original class
+  - If an extension method is defined with the same name and signature as in the original class then if we call the method with original class instance the orignal method will get called.
+  - If we want the extension method with parameters we can add the parameters
+  - "public static void Test3(this Program p, int i){}"
+  - it will ignore the "this Program p" and considers from next params and binding parameter must be first 
+  - We can write the extension methods for the classes which doesn't even have source code available like for int also we can write some method since int is a predefined structure
+```c#
+ public static long Factorial(this Int32 x) // x is the parameter here it will take the input 
+ {
+     long sum = 1;
+     for (int i = 1; i <= x; i++)
+         sum *= i;
+     return sum;
+ }
+
+   int i = 5;
+Console.WriteLine(i.Factorial());
+
+// output:
+120
+```
+  - We can add extension methods in sealed classes also
+  - string  is a sealed class
+```c#
+using System;
+namespace ExtensionMethodsProject
+{
+    class Program
+    {
+        public void Test1()
+        {
+            Console.WriteLine("Method 1");
+        }
+        public void Test2()
+        {
+            Console.WriteLine("Method 2");
+        }
+        static void Main(string[] args)
+        {
+          Program p= new Program();
+            p.Test1();
+            p.Test2();
+            p.Test3(9);
+            // extension of int 
+            int i = 5;
+          Console.WriteLine(i.Factorial());
+            // adding extension method for sealed class(string)
+            string str = "HeLLo How aRe You";
+            String s1 = " ";
+            // let's say i want to convert it in to proper class
+            Console.WriteLine(str.ToProper());
+            Console.WriteLine(s1.ToProper());
+        }
+    }
+}
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace ExtensionMethodsProject
+{
+    static class StatClass
+    {
+        // means the method test3 belongs to the program class
+        public static void Test3(this Program p, int i) // binding the program p with with method
+        {
+            Console.WriteLine("Method 3 " + i);
+        }
+
+        // adding Extension factorial method for int srtucture
+        public static long Factorial(this Int32 x) // x is the parameter here it will take the input 
+        {
+            long sum = 1;
+            for (int i = 1; i <= x; i++)
+                sum *= i;
+            return sum;
+        }
+
+        // Adding Extension properCase method for string class
+        public static string ToProper(this string OldStr)
+        {
+            String NewStr = null;
+            if (OldStr.Trim().Length > 0)
+            {
+                OldStr = OldStr.ToLower();
+                string[] arr = OldStr.Split(" ");
+                foreach (String s in arr)
+                {
+                    char[] carr=s.ToCharArray();
+                    carr[0] = Char.ToUpper(carr[0]);
+                    NewStr += new String(carr)+" ";
+                }
+                return NewStr;
+            }
+            return OldStr;
+        }
+    }
+}
+
+// output:
+Method 1
+Method 2
+Method 3 9
+120
+Hello How Are You
+
+
+```
+
+
+--------------------------------------------------------------------------------
+
+## Diff b/w String and StringBuilder:
+   - Strings are immutable 
+   - Means Once we delacre and initialize a string we ca't modify or perform actions on it
+   - when we initialize a string the memory will be allocated in head memory
+   - and when we concatinate one value with that string then it will create one more string in the new memory location
+   - so 2 copies will be there now the string var will point to the new memory location
+- ![alt text](image-63.png) 
+- ![alt text](image-64.png)
+    - so the string value is never going to override it will create a new copy again in the memory with the conctinated string
+    - when is suggested to go for string is when it requires very less modifications
+    - So it is better to use a string builder when every if we perform many modifications
+    - coz String builder is mutable
+    - StringBuilder sb=new StringBuilder("Hello");
+    - here we are giving 5 chars but internally 16 chars memory will be allocated for this sb for allowing future modifications
+- ![alt text](image-65.png)
+    - we can't use conct(+) symbol on string builder we can use append to add 
+- ![alt text](image-66.png)
+     - It will be going to add like this in the memory 
+-  ![alt text](image-67.png)
+     - again adding new value
+     - will be stored like this in the memory
+- ![alt text](image-68.png)
+     - So initlially when we initialize the memory of 16 chars will be allocate right so when we add more chars than 16 it will resize the memory to 32 chars
+     - so the capacity will get doubles when we add more chars the that capacity
+     - so whenever we want to make frequent changes it is suggest to go for string builder
+     - stringBuilder is present in System.Text nameSpace
+     - string is present under system nameSpace.
+```c#
+using System;
+using System.Text;
+using System.Diagnostics;
+
+namespace StringExample
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            String s = "";
+            for(int i=1;i<=100000;i++)
+            {
+                s = s + i;
+            }
+        }
+    }
+}
+```
+   - here in this code 1lakh times s will get modified means it will create 1lakh +1 copies
+   - lets say we did the same logic with stringBuilder class and we want see how much time each taks takes
+   - so do this we are provided with a class called as stopWatch
+```c#
+using System;
+using System.Text;
+using System.Diagnostics;
+
+namespace StringExample
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+         
+            String s = "";
+            Stopwatch sw1 = new Stopwatch();
+            sw1.Start();
+            for (int i=1;i<=100000;i++)
+            {
+                s = s + i;
+            }
+            sw1.Stop();
+            StringBuilder sb = new StringBuilder();
+            Stopwatch sw2 = new Stopwatch();
+            sw2.Start();
+            for (int i = 1; i <= 100000; i++)
+            {
+                sb.Append(i);
+            }
+            sw2.Stop();
+
+            Console.WriteLine("Time taken for String: " + sw1.ElapsedMilliseconds);
+            Console.WriteLine("Time taken for StringBuilder: " + sw2.ElapsedMilliseconds);
+
+        }
+    }
+}
+
+// output:
+Time taken for String: 6142
+Time taken for StringBuilder: 1
+```
+   - so when we have more modifications to do never go with string go with string builder
+   - In string builder it will initally starts with 16 char memory so if we know the capacity already we can assign it while defining only like below
+   -   " StringBuilder sb = new StringBuilder(10000); " // will starts with 10000 capacity and doubles if this capcity exceeds
+   - by giving the capacity it will increase the capacity little but
+
+   -------------------------------------------------------------------------
+
+## Exceptions and Exception Handling:
+   - ###### Exception:
+      - In our application we come across 2 types of errors:
+          1. Complie time errors - an error occurs due to syntaxial errors like semicolon, doublequotes and braces and these are not dangrous
+          2. Run time errors - errors occure at the time execution of program like wrong implementation of logic, wrong inputs supply and missing required resouces
+          ex: Wrong Implementation of Logic: Lets say i have an array of lenght 5 and when i write a for loop that executes for 6 times then that will be a run time error.
+          Wrong Inputs Supply: lets say we told the use to enter an integer value but use enters like string/bool/double etc.
+          Missing Required Resources: Lets say we write a program to open a file on hard disk and read it but if doesn't exist that will be this error
+
+    - SO these run time errors are dangrous coz the program stops abnormally where the error occurs and will not go to the next line
+    - SO when a program stops abnormally it is the responsibilty of the Exceptions
+    - What is Exceptions:
+       Exception is a classes
+       - diff errors have diff class names like IndexOutOfBoundsException
+       - DivideByZeroException - if we try to divide a num by 0 
+       - OverFlowException - If we try to give the bigger value than the limit of var ex int ,float etc
+       - FormatException: occurs when we try to convert a double into int, string to float etc
+       - If any execption comes and the program stops abnormally it will display the error message so for each error diff class is being given
+- ![alt text](image-69.png) 
+      - Exception are divided into 2 categories:
+         - ApplicationException: porgrams made exception like in our app we don't want the num to be divided by an odd num.
+         - SystemException: are universal exceptions like dividing by 0
+         - all the above exception classes come under systemexceptions
+-  ![alt text](image-70.png)
+       - so every exception class is overriding the virtula message property so that they will display the error message according to the error
+------------------------------------------------------------------------------------
+
+- ### How Exceptions will occur:
+    - Like when we try to divide a num by 0 or try to convert some string to int
+    -  Common Language Runtime (CLR): 
+    - The CLR is a virtual machine that manages the execution of .NET applications.
+    - whever there is a runtime error CLR will create instance of a matching exception class and thows it, the instance which is created by CLR will stops the execution abnormally
+     - To handle this exception we have exception handling
+     - so exception handing is a process of stoping the abnormal terminatio of the program
+     - Adv of Exception Handling:
+- ![alt text](image-71.png)
+- ![alt text](image-72.png)
+    - To handle exception we have to keep the code in try and catch blocks
+- ![alt text](image-73.png)
+- ![alt text](image-74.png)
+    - In try block we keep the code which causes exception or which doen't need to be executed when exception occurs
+    - in catch block correct actions/ error message displaying
+    - catch block will execute only when there is any exception other wise it will skip
+    - At any line there is an exception from that line only controll jumps to the catch block
+    - If an exception occurs at any line of code it will look for the matcing catch block if found the matching catch block abnormal termination stops and executes the catch block and executes the lines sfter catch block
+    - If it doesn't found the matching catch block abnormal termination will occur again 
+    - Finally: we can use the finally block after catch like even the exception occurs or not it will defenatly executes
+    - some imp code will be written in this block(like closing the file, closing db connections etc)
+- ![alt text](image-75.png)
+    - try block evey line will execute if there is no exception in the code
+    - catch block will execute if there is any exception in code
+    - finally block will execute in both the cases
+    - the finally block will execute even if no matching catch block is found and the program is about to terminate abnormally due to an unhandled exception, as long as the runtime isn't forcibly stopped (e.g., by Environment.FailFast(), a system crash, or power failure).
+    - so even if the programs stops abnormally the finally block will executes unit there is a power off or forcefully dtops the program.
+    - Lets say in our program we have finally block and after the finally block also we have one statement so when the excpetion occurs or not the finally block will execute and also the statement after the finally bloxk executes the what is the use of writing the finally block we can directly write the statements after the catch block 
+```c#
+try
+{
+    // some stmt's
+}
+catch(Exception e)
+{
+    // some
+}
+finally
+{
+    print("finally");
+}
+print("end of program");
+
+```
+   - in both the cases like exception occurs or not the finally and end of program will be printed
+   - Then what will be use of finally block?
+```c#
+class Program{
+svm()
+{
+try
+{
+    //some
+    if()
+    return; // exists from the main method
+    // some stms
+}  
+catch(Exception e)
+{
+    //
+}
+finally
+{
+    print("Finally");
+}
+print("end ");
+}// end of method
+} // end of program
+```
+   - in the above program when return is executed the controll will jump to the end method
+   - but even though the finally block will execute bu the end stmt will not execute
+   - so at any case finally will always execute but we can't guarante the stms outside it so this is the use of finally
+   - we can also write try and finally block without catch block, but exceptions will not caught and abnormal termination will occur but even abnormal termination occurs finally block will executes
+
+### Application Exceptions:
+   - when the exceptions are raised by CLR they are called system exceptions and the consitions are predefined in this
+   - Application exceptions are thown by the programer as per ur requirment
+- ![alt text](image-76.png) 
+   - so when the programer wants to throw the exception they can create the instance and thow like shown above
+   - if they don't provide any message the message in the parent Exception class will be displayed
+- ![alt text](image-77.png) 
+   - the above is the example of throwing the application exception
+   -  we can also define the exception class of our own 
+- ![alt text](image-78.png)
+   - in the above ex we can see that the exception class is ApplicationException but we can also define our own exception like dividedByZero exception
+   - how to define own our exception class:
+        1. inherit from any exception class best is applicationException
+```c#
+
+  public class DivideByOddNOException: ApplicationException
+  {
+     public override string Message
+     {
+        get
+        {
+            return "Attempted to divide by odd number";
+        }
+     }
+  }
+//  using th exception class
+ throw new DivideByOddNOException();
+
+```
+- ![alt text](image-79.png)
