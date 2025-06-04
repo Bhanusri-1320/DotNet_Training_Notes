@@ -1286,8 +1286,8 @@ namespace OverLoadProject
             ChildClass c=new ChildClass();
             Parentclass p = c;
             Parentclass p1=new Parentclass();
-            p1.Test1(); // classs the parent class Test1 coz it is not initialized by child class instance
-            p.Test1(); // call child class method coz overriden
+            p1.Test1(); // calls the parent class Test1 coz it is not initialized by child class instance
+            p.Test1(); // calls child class method coz overriden
             p.Test2(); // calls parent class method coz hiding
             c.Test1();
             c.Test2();
@@ -3392,3 +3392,1550 @@ print("end ");
 
 ```
 - ![alt text](image-79.png)
+
+
+
+---------------------------------------------------------------------------------------
+ 
+## Multithreading:
+  - ## MultiTasking:
+      - Windows app is a multitasking operating systems coz we can open many things like note pad, google etc at a time
+      - To execute all the things at a time the operating system is making use of processes.
+      - each process will execute one application
+      - So under the Operating System a process is used to run the each app
+      - under process a  to run the code in application process uses thread
+      - Thread : Is a unit which executes the code under a unit
+      - This thread is responsible for executing the logic under the application
+      - Every application by default has one thread to run the code which is called as Main thread
+      - Every application is by default a single threaded model
+```c#
+using System;
+using System.Threading;
+namespace ThreadDemo
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Thread t = Thread.CurrentThread;
+            t.Name = "Main Thread";
+            Console.WriteLine("Current executing thread is: " + Thread.CurrentThread.Name);
+        }
+    }
+}
+// output :
+Current executing thread is: Main Thread
+```
+   - to print the current running thread we can give one name and print it
+   - By default every program contains a single thread  called Main thread
+   - every app by default is single threaded
+   - the draw back in single thread is:
+      - the one thread only will run all the logic inside the progam
+      -  If the program has more methods  then one after the other is executed
+      - Lets say there are 3 tasks in one method and one is a for loop but the next one is a database fetching and if the db is busy and not responding it might takes more time so the next task will also get dealyed coz the thread will wait for the db response unit it reposnes
+   - To overcome this problem we have Multi-Threading: 
+      - In multi threading each process can have multiple threads and each performs diff action/task
+      - The execution takes place simultaneously
+      - when we have multiple threads process will allocate some time to each thread
+      - so if one taks is delayed it will not effect the next one coz each is executing independently
+      - Multi threading works based on time sharing- all threads will be given equal importance
+      - The adv of this is : The main idea of multi threading is maximum utilization of cpu resources
+      - In case of single thread
+```c#
+using System;
+using System.Threading;
+namespace ThreadDemo
+{
+    class Program
+    {
+        static void Test1()
+        {
+            for(int i=1;i<=10;i++)
+            {
+                Console.WriteLine("Test1: "+i);
+            }
+        }
+        static void Test2()
+        {
+            for (int i = 1; i <= 10; i++)
+            {
+                Console.WriteLine("Test2: " + i);
+                if(i==5)
+                {
+                    Console.WriteLine("Main thread going to sleep");
+                    Thread.Sleep(5000);
+                    Console.WriteLine("Main thread woke up");
+                }
+            }
+        }
+        static void Main(string[] args)
+        {
+            Thread t = Thread.CurrentThread;
+            t.Name = "Main Thread";
+            Console.WriteLine("Current executing thread is: " + Thread.CurrentThread.Name);
+            Test1();
+            Test2();
+        }
+    }
+}
+// output:
+Current executing thread is: Main Thread
+Test1: 1
+Test1: 2
+Test1: 3
+Test1: 4
+Test1: 5
+Test1: 6
+Test1: 7
+Test1: 8
+Test1: 9
+Test1: 10
+Test2: 1
+Test2: 2
+Test2: 3
+Test2: 4
+Test2: 5
+Main thread going to sleep
+Main thread woke up
+Test2: 6
+Test2: 7
+Test2: 8
+Test2: 9
+Test2: 10
+```
+  - ### What is Multi threading:
+      - in this we call each method by using a seperate thread
+      - then Operating system is going to allocate some time to each thread
+      - then all the mthods will execute with equal priority
+      - So when we assign one thread to each task operating system will assign some time to each taks
+      - lets say for 1st task it assignes 2 secs and it will complete how much task it completes in 2 seconds
+      - After thet controll will go to 2nd thread that also will complete how much work it can do
+      - after the 2 secinds the controll will come to 3rd thread it will do for 2 seconds
+      - then again goes to 1st thread for 2 seconds like that opearing system will share the time b/w all the threads 
+      - but all will not execute at the same time, it is like simulataneous execution like thread-1 executes for some time then thread-2 etc
+      - Lets say thread-2 is doing some db operations and taking some time then that time will be shared between the thread-1 and 3.
+      - whenever the thread-2 comes into active again the same process
+      - so when there is some time consuming task in ht middle it will not wait for that
+- ![alt text](image-80.png)
+      - when we create 3 seperate threads for eah method in the program there will be of total 4 threads including main thread
+      - and when we assign each method a new thread we don't need to explictly call the method we can directly start the thread
+```c#
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace ThreadDemo
+{
+     class ThreadTest
+    {
+        static void Test1()
+        {
+            for (int i = 1; i <= 10; i++)
+            {
+                Console.WriteLine("Test1: " + i);
+            }
+        }
+        static void Test2()
+        {
+            for (int i = 1; i <= 10; i++)
+            {
+                Console.WriteLine("Test2: " + i);
+            }
+        }
+        static void Test3()
+        {
+            for (int i = 1; i <= 10; i++)
+            {
+                Console.WriteLine("Test3: " + i);
+            }
+        }
+        static void Main(string[] args)
+        {
+            Thread t1=new Thread(Test1);
+            Thread t2 = new Thread(Test2);
+            Thread t3 = new Thread(Test3);
+            t1.Start();
+            t2.Start();
+            t3.Start();
+
+        }
+    }
+}
+// output:
+Test2: 1
+Test2: 2
+Test2: 3
+Test2: 4
+Test2: 5
+Test2: 6
+Test2: 7
+Test2: 8
+Test2: 9
+Test2: 10
+Test3: 1
+Test3: 2
+Test3: 3
+Test3: 4
+Test3: 5
+Test3: 6
+Test3: 7
+Test3: 8
+Test3: 9
+Test3: 10
+Test1: 1
+Test1: 2
+Test1: 3
+Test1: 4
+Test1: 5
+Test1: 6
+Test1: 7
+Test1: 8
+Test1: 9
+```
+   - here one taks will not wait for other unlike single threading
+   - So this multi-threading will speed up the performace since we are not wasting the cpu time we are utilizing it to the max extent
+
+- #### Constructors of Thread class:
+     - 4 constructirs are in thread class
+         - 1. ThreadStart -> its a delegate of non-value returining and doesn't take any parameters
+           - since its a delegate we need to inistanciate the delegate and pass it to the thread
+           - " ThreadStart obj=new ThreadStart(method name);
+               Thread t=new Thread(obj);
+               t.start(); "
+            - but before we are doing like 
+             " Thread t=new Thread(method name);
+               t.start(); "
+            - here the inanstiation of delegate is done by clr implictly
+- ![alt text](image-81.png)
+- ![alt text](image-82.png)
+```c#
+namespace ThreadDemo
+{
+    class ConThreadDemo
+    {
+        static void Test()
+        {
+            for (int i = 0; i <= 10; i++)
+            {
+                Console.WriteLine("Test: " + i);
+            }
+        }
+        static void Main(string[] args)
+        {
+            //ThreadStart obj=new ThreadStart(Test);
+            //ThreadStart obj = Test;
+            //ThreadStart obj = delegate () { Test(); };
+            ThreadStart obj = () => Test();
+            Thread t=new Thread(obj);
+            t.Start();
+        }
+    }
+}
+
+```
+ - we can inistinate the delegate in these above ways
+       - 2. ParameterizedThreadStart - to pass any parameters
+       - takes object as the parameter
+       - and we have to pass the parameter with start method
+       - since the parameter is of type obj even if we pass the string or any non integer value it will executes but throws exception so should not pass non interger value
+```c#
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Threading;
+
+namespace ThreadDemo
+{
+    class ConThreadDemo
+    {
+        //static void Test()
+        //{
+        //    for (int i = 0; i <= 10; i++)
+        //    {
+        //        Console.WriteLine("Test: " + i);
+        //    }
+        //}
+        static void Test(Object max)
+        {
+            int num = Convert.ToInt32(max);
+            for (int i = 0; i < num; i++)
+            {
+                Console.WriteLine("Test: " + i);
+            }
+        }
+
+            static void Main(string[] args)
+            {
+                //ThreadStart obj=new ThreadStart(Test);
+                //ThreadStart obj = Test;
+                //ThreadStart obj = delegate () { Test(); };
+                //ThreadStart obj = () => Test();
+                ParameterizedThreadStart obj = new ParameterizedThreadStart(Test);
+                Thread t = new Thread(obj);
+                t.Start(10);
+            }
+        }
+    }
+// output:
+0-9
+```
+- #### Join Method in Thread class:
+    - when we assign each thread to each task the main thread is exiting in the middle beofre all the threads completed task so that should not happen right
+    - if we write like t1.join(); t2.join();
+    - so join means calling thread can't exist from the program unit all the other threads exists
+    - means main thread can't exist unit all the thread exists
+    - the t.join() is called by main so it can't exist only after executing the join it will exit
+    - if we give time in join(3000) means the main thread wits for 3 sec to exit that if not existed in that time, main thread will exit
+    - If we don't provide any time in join method then the main thread will wait unit that thread exists
+
+- #### Thread Locking:
+   - Lets say there is a method and more than one thread is trying to access the method at a same time
+   - like in dbs, webservers etc
+   - lets say we have sleep method in that method and when 1st thread is sleeping the 2nd thread will start and executes the means runs
+```c#
+namespace ThreadDemo
+{
+    class ThreadLocking
+    {
+        public void Display()
+        {
+            Console.WriteLine("[CSharp is an ");
+            Thread.Sleep(5000);
+            Console.WriteLine("Object Oriented Language]");
+        }
+        static void Main(string[] args)
+        {
+           ThreadLocking td=new ThreadLocking();
+            Thread t1 = new Thread(td.Display);
+            t1.Start();
+            Thread t2 = new Thread(td.Display);
+            t2.Start();
+        }
+    }
+}
+// output:
+[CSharp is an
+[CSharp is an
+Object Oriented Language]
+Object Oriented Language]
+```
+  - In case of connecting with db like when one thread is trying to modify one resord and the second thread is also trying to modify the record then that will be a problem
+  - So resolve the problem we are provided with locking method
+  - we can use the lock method on the code 
+```c#
+namespace ThreadDemo
+{
+    class ThreadLocking
+    {
+        public void Display()
+        {
+            lock (this)
+            {
+                Console.Write("[CSharp is an ");
+                Thread.Sleep(5000);
+                Console.WriteLine("Object Oriented Language]");
+            }
+        }
+        static void Main(string[] args)
+        {
+           ThreadLocking td=new ThreadLocking();
+            Thread t1 = new Thread(td.Display);
+            t1.Start();
+            Thread t2 = new Thread(td.Display);
+            t2.Start();
+        }
+    }
+}
+
+// output:
+[CSharp is an Object Oriented Language]
+[CSharp is an Object Oriented Language]
+```
+  - This concept is like when one thread is accessing the code the the code will be locked and other thread will not be able to access it and they wait outside unit the code completes it execution
+  - this will happen only if multiple threads try to access one method if there are diff threads for diff tasks then this problem will not come
+
+## Thread Priorities:
+  - Thread have 5 diif priorities
+  - By deafult every thread is going to run on normal priority and utilizing the cpu resources equally
+  - Lowest
+  - Below Normal
+  - Normal // default
+  - Above Normal
+  - Heightest
+  - SO if the priority is set to heightest that thread will consume the more cpu resources
+  - If we want to stop a thread we can use abort method
+  - t1.abort() // terminates the thread
+  - Lets say i have infinite loop running in the method and i want that to run only for 10sec then stope it for that we can use the abort method to terminate the threads and sleeping the main thread for 10sec since it is going to execute the abort after starting sleep for 10 secs and abort them
+```c#
+namespace ThreadDemo
+{
+     class ThreadPriorities
+    {
+        static long Count1, Count2;
+        public static void IncrementCount1()
+        {
+            while (true)
+                Count1 += 1;
+        }
+        public static void IncrementCount2()
+        {
+            while (true)
+                Count2 += 1;
+        }
+        static void Main(string[] args)
+        {
+            Thread t1 = new Thread(IncrementCount1);
+            Thread t2= new Thread(IncrementCount2);
+            t1.Start();
+            t2.Start();
+            Console.WriteLine("Main thread going to sleep");
+            Thread.Sleep(10000);
+            Console.WriteLine("Main thread woke up");
+            t1.Abort();
+            t2.Abort();
+            t1.Join();
+            t2.Join();
+            Console.WriteLine("Count1: "+Count1);
+            Console.WriteLine("Count2: "+Count2);
+        }
+    }
+}
+
+// output:
+Main thread going to sleep
+Main thread woke up
+Count1: 12345687
+Count2: 6354687496
+```
+  - in the above ex we don't know which count will have the hightest value since both have the same priority
+  
+  - Thread t1 = new Thread(IncrementCount1);
+     Thread t2= new Thread(IncrementCount2)
+     t1.Priority = ThreadPriority.Lowest;
+     t2.Priority = ThreadPriority.Highest;
+     t1.start(); t2.start();
+
+  - in this case the count2 value will be highest since it has more priority
+
+- ##### How Multi-threading improves performance:
+
+    - program with single thread:
+```c#
+namespace ThreadDemo
+{
+     class ThreadPerformance
+    {
+        public static void IncrementCounter1()
+        {
+            long count = 0;
+            for(long i=0;i<=1000000000;i++)
+            {
+                count++;
+            }
+            Console.WriteLine("IncrementCounter1: "+count);
+        }
+
+        public static void IncrementCounter2()
+        {
+            long count = 0;
+            for (long i = 0; i <= 1000000000; i++)
+            {
+                count++;
+            }
+            Console.WriteLine("IncrementCounter2: " + count);
+        }
+        static void Main(string[] args)
+        {
+            Stopwatch s1=new Stopwatch(); // to count how much time it has taken in sec
+            s1.Start();
+            IncrementCounter1 ();
+            IncrementCounter2();
+            s1.Stop();
+            Console.WriteLine(s1.ElapsedMilliseconds);
+        }
+
+    }
+}
+// output:
+IncrementCounter1: 1000000001
+IncrementCounter2: 1000000001
+2176
+```
+  - with multi-threading:
+
+```c#
+namespace ThreadDemo
+{
+     class ThreadPerformance
+    {
+        public static void IncrementCounter1()
+        {
+            long count = 0;
+            for(long i=0;i<=1000000000;i++)
+            {
+                count++;
+            }
+            Console.WriteLine("IncrementCounter1: "+count);
+        }
+
+        public static void IncrementCounter2()
+        {
+            long count = 0;
+            for (long i = 0; i <= 1000000000; i++)
+            {
+                count++;
+            }
+            Console.WriteLine("IncrementCounter2: " + count);
+        }
+        static void Main(string[] args)
+        {
+            Thread t1 = new Thread(IncrementCounter1);
+            Thread t2 = new Thread(IncrementCounter2);
+            Stopwatch s1=new Stopwatch(); // to count how much time it has taken in sec
+            s1.Start();
+            t1.Start();
+            t2.Start();
+            s1.Stop();
+            t1.Join();
+            t2.Join();
+            //IncrementCounter1();
+            //IncrementCounter2();
+            Console.WriteLine(s1.ElapsedMilliseconds);
+        }
+
+    }
+}
+// output:
+IncrementCounter1: 1000000001
+IncrementCounter2: 1000000001
+23
+```
+
+- ![alt text](image-83.png)
+- the diff b/w single and multi threaded model 
+
+
+
+
+---------------------------------------------------------------------------------------
+
+## Collections in C#:
+   - Dynamic Array:
+   - Problems with Arrays:
+   - 1. Array size is fixed once it is declared
+   - to increase the size of the array after declaring therea re 2 ways 
+        1. declare a new array with increased size
+        2. or using Array.resize method - this method will distroy the old array and create a new array  nd copies the old values to the new array
+
+```c#
+svm
+{
+    int[] arr=new int[10];
+    Array.Resize(ref arr,15);
+}
+``` 
+   - 2. we can never insert a new value into the middle of an array
+   - 3. we can never delete a value from the middle of array
+   - so to overcome this probelm we use collestions
+   - collections means dynamic array
+   - these have all the 3 features that arrays doesn't have
+   - Non-Generic Collections:
+        - System.Collections: Stack, Queue, LinkedList, SortedList, ArrayList, Hashtable.
+- #### ArrayList:
+    - Diff b/w Array and Array List:
+- ![alt text](image-84.png)
+     - Capacity: tells about how many values that collection can store
+     - In array list initially when we define the arraylist and didnot add anything capacity=0
+     - when we add a item to it then capcity will be =4 when 4 items are filled it will resize to 8, it will double every time
+
+```c#
+namespace CollectionProject
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            ArrayList al=new ArrayList();
+            Console.WriteLine(al.Capacity); //0 
+            al.Add(100);
+            Console.WriteLine(al.Capacity); // 4
+            al.Add(200); al.Add(300); al.Add(400);
+            Console.WriteLine(al.Capacity); // 4
+            al.Add(500);
+            Console.WriteLine(al.Capacity); // 8
+
+        }
+    }
+}
+// output:
+0
+4
+4
+8
+```
+   - SO when we don't provide any initiali capacity above will be the casw
+   - we can also provide the initial capacity like
+   - ArrayList al=new ArrayList(10); // the initial capacity will be 10 and after that keeps on doubling
+```c#
+static void Main(string[] args)
+{
+    ArrayList al=new ArrayList(10);
+    Console.WriteLine(al.Capacity); //10 
+    al.Add(100);
+    Console.WriteLine(al.Capacity); // 10
+    al.Add(200); al.Add(300); al.Add(400);
+    Console.WriteLine(al.Capacity); // 10
+    al.Add(500);
+    Console.WriteLine(al.Capacity); // 10
+
+}
+// output:
+10 10 10 10
+```
+  - when we add the items to the array list it will bydefault add at the end and when we want to insert in the middle
+  - we can use al.Insert(index, value) // will insert at particular index
+```c#
+namespace CollectionProject
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            ArrayList al=new ArrayList();
+            Console.WriteLine(al.Capacity); //0 
+            al.Add(100);
+            Console.WriteLine(al.Capacity); // 4
+            al.Add(200); al.Add(300); al.Add(400);
+            Console.WriteLine(al.Capacity); // 4
+            al.Add(500);
+            Console.WriteLine(al.Capacity); // 8
+            foreach(int obj in al)
+            {
+                Console.Write(obj+" ");
+            }
+            al.Insert(4, 350);
+            Console.WriteLine();
+            foreach (int obj in al)
+            {
+                Console.Write(obj + " ");
+            }
+            Console.WriteLine();
+            Console.WriteLine(al); // gives the class name
+        }
+    }
+}
+
+// output:
+0
+4
+4
+8
+100 200 300 400 500
+100 200 300 400 350 500
+System.Collections.ArrayList
+```
+   - Remove(value) : removes that particular value
+   - RemoveAt(index) // removes that particular index value
+```c#
+class Program
+{
+    static void Main(string[] args)
+    {
+        ArrayList al=new ArrayList();
+        Console.WriteLine(al.Capacity); //0 
+        al.Add(100);
+        Console.WriteLine(al.Capacity); // 4
+        al.Add(200); al.Add(300); al.Add(400);
+        Console.WriteLine(al.Capacity); // 4
+        al.Add(500);
+        Console.WriteLine(al.Capacity); // 8
+        foreach(int obj in al)
+        {
+            Console.Write(obj+" ");
+        }
+        al.Insert(4, 350);
+        Console.WriteLine();
+        foreach (int obj in al)
+        {
+            Console.Write(obj + " ");
+        }
+        Console.WriteLine();
+        //al.Remove(200); // to remove an value 
+        al.RemoveAt(1); // removes 1st index value
+        foreach (int obj in al)
+        {
+            Console.Write(obj + " ");
+        }
+        Console.WriteLine();
+        Console.WriteLine(al); // gives the class name
+    }
+}
+// output:
+0
+4
+4
+8
+100 200 300 400 500
+100 200 300 400 350 500
+100 300 400 350 500
+System.Collections.ArrayList
+```
+
+- #### Hashtable:
+   - In array and arraylist they works on index based
+   - Both of them store values in a key/value combination: keys->index we can't modify the keys
+   - lets say we stored details of any employee in an arraylist like name, email,etc
+   - when we want to find email we don't know at which index it is 
+   - we don't know which attribute value is stored in which location
+   - so to solve this problem we have hashtable
+   - Hashtabel is similarly like arraylist means dynamically change the lengthe and store in key/value combination but the keys are defined by user
+   - while storing the values into the hashtable we can give the key and value pairs
+- ![alt text](image-85.png)
+   - so when we have want to pick email we can direcclty use the key and pick it 
+   - taking a value with key example:
+```c#
+namespace CollectionsProject
+{
+     class HashCollection
+    {
+        static void Main(string[] args)
+        {
+            Hashtable ht=new Hashtable();
+            ht.Add("Eid","101");
+            ht.Add("Ename","scoot");
+            ht.Add("Email","scott@gmail.com");
+            ht.Add("Dname","Sales");
+            ht.Add("Location","Mumbai");
+            ht.Add("Did",30);
+            Console.WriteLine(ht["Email"]);
+        }
+    }
+}
+// output:
+scott@gmail.com
+```
+   - To get all the keys and values:
+```c#
+namespace CollectionsProject
+{
+     class HashCollection
+    {
+        static void Main(string[] args)
+        {
+            Hashtable ht=new Hashtable();
+            ht.Add("Eid","101");
+            ht.Add("Ename","scoot");
+            ht.Add("Email","scott@gmail.com");
+            ht.Add("Dname","Sales");
+            ht.Add("Location","Mumbai");
+            ht.Add("Did",30);
+            Console.WriteLine(ht["Email"]); // getting value with key
+            // to get all the keys and values
+            foreach(Object key in ht.Keys)
+     Console.WriteLine(key +": " + ht[key]);
+        }
+    }
+}
+
+// output:
+scott@gmail.com
+Email : scott@gmail.com
+Location : Mumbai
+Ename : scoot
+Eid : 101
+Did : 30
+Dname : Sales
+```
+  - we will not get the values in sequential order coz, the keys will internally generate a hashcode value and stores
+  - so while storing it will store hashcode, key and value
+  - while fetching it will fetch with hashcode and this hashcode is an integer
+  
+- In collections we can add any type of object like in an arraylist we can store int,string,bool and evrthing in one 
+- but when we want the list to be purely interger that will be a problem in collections
+- Array - typesafe but fixed length
+- Collection - Auto Resizing but not type safe
+- So we want the combination of both so in c# 2.o a concept is provided called as "Generic Collections".
+- Generic Collections: Type safe and auto Resizing
+- ![alt text](image-86.png)
+- ![alt text](image-87.png)
+- System.Collections --> contains only non-generic 
+- System.Collections.Generic --> constains generic 
+- ArrayList is called as List in generics
+- what are all the methods in arraylist class are present in list class of generic classes
+
+- ### Generics:
+     - Letsa say we wrote a method to compare 2 intergers and diff methods for comparing sting, bool float etc.
+     - but instead of writing many methods in one method we can write without mentionaining any specific datatype only with object
+     - ex: comapare(int a, int b)
+    - compare(Object a, Object b)
+    - but with objects if we pass one as float and other as double then it will not throw any error it will try to comapre them
+    - so to solve this problem generics are introduces in C# 2.o
+    - To add generics to the method we have to <T> like below
+```c#
+namespace CollectionsProject
+{
+    internal class Generics1
+    {
+        public bool Compare<T>(T a,T b)
+        {
+            if(a.Equals(b)) return true;
+            return false;
+        }
+        static void Main(string[] args)
+        {
+            Generics1 obj=new Generics1();
+            Console.WriteLine(obj.Compare<int>(12,20));
+            Console.WriteLine(obj.Compare<float>(12.34f, 12.34f));
+            Console.WriteLine(obj.Compare<bool>(true, false));
+        }
+    }
+}
+//output:
+false
+true
+false
+```
+- ![alt text](image-88.png)
+- ![alt text](image-89.png)  
+    - so by using the above method we can give diff datatypes
+- ![alt text](image-90.png) 
+- ![alt text](image-91.png)
+    - In the above example dynamic means it identifies the type of var in runtime
+    - If a pass a float value then d1 and d2 will become float in the run time
+```c#
+namespace CollectionsProject
+{
+    internal class Generics2
+    {
+        public void Add<T>(T a,T b)
+        {
+            dynamic d1 = a;
+            dynamic d2 = b;
+            Console.WriteLine(d1+d2);
+        }
+        public void Sub<T>(T a, T b)
+        {
+            dynamic d1 = a;
+            dynamic d2 = b;
+            Console.WriteLine(d1 - d2);
+        }
+        public void Mul<T>(T a, T b)
+        {
+            dynamic d1 = a;
+            dynamic d2 = b;
+            Console.WriteLine(d1 * d2);
+        }
+        public void Div<T>(T a, T b)
+        {
+            dynamic d1 = a;
+            dynamic d2 = b;
+            Console.WriteLine(d1 / d2);
+        }
+        static void Main(string[] args)
+        {
+            Generics2 obj= new Generics2();
+            obj.Add<int>(10, 20); obj.Sub<int>(10, 20);
+            obj.Mul<int>(10, 20); obj.Div<int>(10, 20);
+        }
+    }
+}
+```
+  - here instead of passing every time and for every method we can directly pass the generic to the class
+
+```c#
+namespace CollectionsProject
+{
+     class Generics2<T>
+    {
+        public void Add(T a,T b)
+        {
+            dynamic d1 = a;
+            dynamic d2 = b;
+            Console.WriteLine(d1+d2);
+        }
+        public void Sub(T a, T b)
+        {
+            dynamic d1 = a;
+            dynamic d2 = b;
+            Console.WriteLine(d1 - d2);
+        }
+        public void Mul(T a, T b)
+        {
+            dynamic d1 = a;
+            dynamic d2 = b;
+            Console.WriteLine(d1 * d2);
+        }
+        public void Div(T a, T b)
+        {
+            dynamic d1 = a;
+            dynamic d2 = b;
+            Console.WriteLine(d1 / d2);
+        }
+        }
+        class TestGenerics
+    {
+        static void Main(string[] args)
+        {
+            Generics2<int> obj = new Generics2<int>();
+            obj.Add(10, 20); obj.Sub(10, 20);
+            obj.Mul(10, 20); obj.Div(10, 20);
+        }
+    }
+}
+// output:
+30
+-10
+200
+0
+```
+   - SO If i change at the class instance all methods will take that type only
+
+- #### Generics Hashtable:
+   - hashtable is replcaed as dictionary
+   - In list type it only takes value but in the dictionary it will takes both key and value type
+   -  Dictionary<TKey,TValue>
+   - comapred to hashtable it has same methods but while declaring we have to sepcity the generics and 
+   - in hashtable it doesn't stored in sequence but in dictionary it will store in sequence
+```c#
+namespace CollectionsProject
+{
+    internal class DictionaryCollection
+    {
+        static void Main(string[] args)
+        {
+            Dictionary<String,Object> dist = new Dictionary<String,Object>();
+            dist.Add("Eid", "101");
+            dist.Add("Ename", "scoot");
+            dist.Add("Email", "scott@gmail.com");
+            dist.Add("Dname", "Sales");
+            dist.Add("Location", "Mumbai");
+            dist.Add("Did", 30);
+            foreach (String key in dist.Keys)
+            {
+                Console.WriteLine(key+" : " + dist[key]);
+            }
+        }
+    }
+}
+
+// output:
+Eid : 101
+Ename : scoot
+Email : scott@gmail.com
+Dname : Sales
+Location : Mumbai
+Did : 30
+```
+   - in this dictionary we can specify the pre-defined types like int, float, bool, string etc. and also we can store some user defined types
+   - COllections on userdefined types:
+```c#
+namespace CollectionsProject
+{
+    public class Customer
+    {
+        public int Custid { get; set; }
+        public string Name { get; set; }
+        public string City { get; set; }
+        public double Balance { get; set; }
+
+    }
+    class TestCustomer
+        {
+        static void Main(string[] args)
+        {
+            List<Customer> Customers = new List<Customer>();
+            Customer c1 = new Customer { Custid=101, Name="Scott", City="Hyd", Balance=25000.00 };
+            Customer c2 = new Customer { Custid = 102, Name = "Smith", City = "Chennai", Balance = 28000.00 };
+            Customer c3 = new Customer { Custid = 103, Name = "Dave", City = "Delhi", Balance = 38000.00 };
+            Customer c4 = new Customer { Custid = 104, Name = "David", City = "Goa", Balance = 89000.00 };
+            Customers.Add(c1);  
+            Customers.Add(c2);
+            Customers.Add(c3);
+            Customers.Add(c4);
+            foreach (Customer obj in Customers)
+            {
+                Console.WriteLine(obj.Custid+" "+obj.Name+" "+obj.City+" "+obj.Balance);
+            }
+        }
+    }
+}
+
+// output:
+101 Scott Hyd 25000
+102 Smith Chennai 28000
+103 Dave Delhi 38000
+104 David Goa 89000
+```
+
+- #### Using IComaparable and ICpmparer Interfaces:
+   - lets asy we want to sort the items in a list with interger values we can directly use list.sort()
+   - but when we have complex list like class as the  complex type then sort doesn't work with this 
+   - to resolve this problem we use IComparable but we need to implement the interface method CompareTo
+   - then when we can use sort() methods directly
+   - if we want to sort with marks or id or anything we can write the logic in the implemented method from the interface like below:
+
+```c#
+
+namespace CollectionsProject
+{
+    public class Student: IComparable<Student>
+    {
+        public int SId { get; set; }
+        public string Name { get; set; }
+        public int Class { get; set; }
+        public float Marks {  get; set; }
+
+        public int CompareTo(Student other) // comparing present student with other 
+        {
+            if(this.Marks>other.Marks)
+                return 1;
+            else if(this.Marks<other.Marks)
+                return -1;
+            else return 0;
+        }
+    }
+    class TestStudent
+    {
+        static void Main(string[] args)
+        {
+            Student s1 = new Student { SId = 101, Name = "Ajay", Class = 10, Marks = 78.23f };
+            Student s2 = new Student { SId = 102, Name = "Stuart", Class = 10, Marks = 69.73f };
+            Student s3 = new Student { SId = 103, Name = "David", Class = 10, Marks = 89.23f };
+            Student s4 = new Student { SId = 104, Name = "John", Class = 10, Marks = 72.45f };
+            // we can also add items inot list like below called as collection initializer
+            List<Student> Students = new List<Student>() { s1, s2, s3, s4 };
+            // to sort the list with complex data type
+            Students.Sort();
+            foreach (Student student in Students)
+            {
+                Console.WriteLine(student.SId+" "+student.Name+" "+student.Class+" "+student.Marks);
+            }
+        }
+    }
+}
+// output:
+102 Stuart 10 69.73
+104 John 10 72.45
+101 Ajay 10 78.23
+103 David 10 89.23
+```
+- ##### IComparer Interface:
+
+- Lets say the class is already implemented the method with sId ansending order and i want to sort with marks and i don't have the source code of th eclass then we can use write a new class and inherite with a IComparer  interface
+- and to use this Icomparer one we need to create the instance of the newly creadted class and pass that instance as param to sort method like below:
+```c#
+
+namespace CollectionsProject
+{
+    public class Student: IComparable<Student>
+    {
+        public int SId { get; set; }
+        public string Name { get; set; }
+        public int Class { get; set; }
+        public float Marks {  get; set; }
+
+        public int CompareTo(Student other) // comparing present student with other 
+        {
+            if(this.Marks>other.Marks)
+                return 1;
+            else if(this.Marks<other.Marks)
+                return -1;
+            else return 0;
+        }
+    }
+    class CompareStudents : IComparer<Student>
+    {
+        public int Compare(Student? x, Student? y) // sorting with id in desc
+        {
+            if(x.SId>y.SId)
+                return -1;
+            else if(x.SId<y.SId) return 1;
+            return 0;
+        }
+    }
+    class TestStudent
+    {
+        static void Main(string[] args)
+        {
+            Student s1 = new Student { SId = 101, Name = "Ajay", Class = 10, Marks = 78.23f };
+            Student s2 = new Student { SId = 102, Name = "Stuart", Class = 10, Marks = 69.73f };
+            Student s3 = new Student { SId = 103, Name = "David", Class = 10, Marks = 89.23f };
+            Student s4 = new Student { SId = 104, Name = "John", Class = 10, Marks = 72.45f };
+            // we can also add items inot list like below called as collection initializer
+            List<Student> Students = new List<Student>() { s1, s2, s3, s4 };
+
+            // to sort the list with complex data type
+            //Students.Sort();
+
+            // to sort with IComparer
+            CompareStudents obj=new CompareStudents();
+            Students.Sort(obj);
+            foreach (Student student in Students)
+            {
+                Console.WriteLine(student.SId+" "+student.Name+" "+student.Class+" "+student.Marks);
+            }
+        }
+    }
+}
+// output:
+104 John 10 72.45
+103 David 10 89.23
+102 Stuart 10 69.73
+101 Ajay 10 78.23
+```
+- collections have sort method to sort the simple data types but for complex data types like class 
+- using this IComparable and ICompare INterfaces we can perform the sorting actions for complex data types
+- Sort has 4 overloads:
+    - 1. No Params:for int, float we can use
+    - 2. Comparison delegate:
+    - 3. IComparer: above explained
+    - 4. IComparer with from which value to which value we can compare
+- if we want sort only some items with IComparer:
+- where we can tell the range form which item to which item we have to sort
+```c#
+namespace CollectionsProject
+{
+    public class Student: IComparable<Student>
+    {
+        public int SId { get; set; }
+        public string Name { get; set; }
+        public int Class { get; set; }
+        public float Marks {  get; set; }
+
+        public int CompareTo(Student other) // comparing present student with other 
+        {
+            if(this.Marks>other.Marks)
+                return 1;
+            else if(this.Marks<other.Marks)
+                return -1;
+            else return 0;
+        }
+    }
+    class CompareStudents : IComparer<Student>
+    {
+        public int Compare(Student? x, Student? y) // sorting with id in desc
+        {
+            if(x.SId>y.SId)
+                return -1;
+            else if(x.SId<y.SId) return 1;
+            return 0;
+        }
+    }
+    class TestStudent
+    {
+        static void Main(string[] args)
+        {
+            Student s1 = new Student { SId = 101, Name = "Ajay", Class = 10, Marks = 78.23f };
+            Student s2 = new Student { SId = 102, Name = "Stuart", Class = 10, Marks = 69.73f };
+            Student s3 = new Student { SId = 103, Name = "David", Class = 10, Marks = 89.23f };
+            Student s4 = new Student { SId = 104, Name = "John", Class = 10, Marks = 72.45f };
+            // we can also add items inot list like below called as collection initializer
+            List<Student> Students = new List<Student>() { s1, s2, s3, s4 };
+
+            // to sort the list with complex data type
+            //Students.Sort();
+
+            // to sort with IComparer
+            CompareStudents obj=new CompareStudents();
+            //Students.Sort(obj);
+            // sorting only some items
+            Students.Sort(1, 3, obj);
+            foreach (Student student in Students)
+            {
+                Console.WriteLine(student.SId+" "+student.Name+" "+student.Class+" "+student.Marks);
+            }
+        }
+    }
+}
+// output:
+101 Ajay 10 78.23
+104 John 10 72.45
+103 David 10 89.23
+102 Stuart 10 69.73
+```
+
+- 4. which takes Comparision delegate as param
+- since it is a delegate it takes a method as param while creating the instance with method that matches signature
+```c#
+
+    namespace CollectionsProject
+    {
+        public class Student: IComparable<Student>
+        {
+            public int SId { get; set; }
+            public string Name { get; set; }
+            public int Class { get; set; }
+            public float Marks {  get; set; }
+
+            public int CompareTo(Student other) // comparing present student with other 
+            {
+                if(this.Marks>other.Marks)
+                    return 1;
+                else if(this.Marks<other.Marks)
+                    return -1;
+                else return 0;
+            }
+        }
+        class CompareStudents : IComparer<Student>
+        {
+            public int Compare(Student? x, Student? y) // sorting with id in desc
+            {
+                if(x.SId>y.SId)
+                    return -1;
+                else if(x.SId<y.SId) return 1;
+                return 0;
+            }
+        }
+        class TestStudent
+        {
+        public static int CompareNames(Student s1, Student s2)
+        {
+            return s1.Name.CompareTo(s2.Name); // string has an inbuilt comapre method
+        }
+            static void Main(string[] args)
+            {
+                Student s1 = new Student { SId = 101, Name = "Ajay", Class = 10, Marks = 78.23f };
+                Student s2 = new Student { SId = 102, Name = "Stuart", Class = 10, Marks = 69.73f };
+                Student s3 = new Student { SId = 103, Name = "David", Class = 10, Marks = 89.23f };
+                Student s4 = new Student { SId = 104, Name = "John", Class = 10, Marks = 72.45f };
+                // we can also add items inot list like below called as collection initializer
+                List<Student> Students = new List<Student>() { s1, s2, s3, s4 };
+
+            // to sort the list with complex data type
+            //Students.Sort();
+
+            // to sort with IComparer
+            //CompareStudents obj=new CompareStudents();
+            //Students.Sort(obj);
+            // sorting only some items
+            //Students.Sort(1, 3, obj);
+
+            // sort another oveload method with delegate as param
+            Comparison<Student> obj = new Comparison<Student>(CompareNames);
+            Students.Sort(obj);
+                foreach (Student student in Students)
+                {
+                    Console.WriteLine(student.SId+" "+student.Name+" "+student.Class+" "+student.Marks);
+                }
+            }
+        }
+    }
+```
+- ![alt text](image-92.png)
+- ![alt text](image-93.png)
+
+
+- ### IEnumerable Interface:
+- ![alt text](image-94.png) 
+- classes which are index base like list, array list are under ILIst
+- classes which are key,value based are under IDictionary
+- 🔹 What is IEnumerable in C#?
+✅ Simple Definition:
+IEnumerable is an interface in C# that lets you loop through a collection using a foreach loop.
+
+🧠 Think of It Like:
+If a class implements IEnumerable, it means:
+"Hey! You can go through my items one by one."
+
+🧾 Real-Life Example:
+Imagine a bookshelf with books.
+You don’t need to know how the shelf works inside —
+You just want to go through each book, one by one.
+
+That’s what IEnumerable allows you to do in C#.
+
+
+
+
+
+---------------------------------------------------------------------------------------
+
+- ## LINQ (Language Integrated Query):
+    - is a new query language designed by the microsoft
+    - Its a query language similar to sql
+    - lets say we have some int values in an array and we want to get the values which are greater than40 and arrange them in desc order we have to write a lot of loigc but if the data is in tables then that must be easy to get the items from table and sort them reverse them etc
+    - The concept of LINQ is if we can perform querying on tables means why can't we on array 
+    - So to solve this probelm microsoft introduced a language called linq
+    - Using LINQ we can write queries on a wide variaty of data sources  like Arrays, Collections, Database Tables, DataSet's , Xml Data.
+    - normal select statement:
+    select <Col_Name> from <table> [as <alias>] 
+    [<clauses>]
+    - clauses are:
+       - where
+       - group by
+       - having
+       - order by
+    - Query on an array/collection:
+      from <alias> in <coll| arr> [<clauses>] select <alias>
+
+- ![alt text](image-95.png)
+var brr= from i in arr select i; // the result array will be stored in the brr
+- var brr= from i in arr where  i>40 select i; // getting >40 integers
+- var brr= from i in arr where i>40  orderby i select i; // values greater than 40 in asc order
+- var brr= from i in arr where i>40 orderby i descending select i;
+- ![alt text](image-96.png)
+
+```c#
+namespace LINQProject
+{
+    class Program
+    {
+        static void main(string[] args)
+        {
+            int[] arr = [12, 34, 67, 23, 78, 45, 67, 98, 2, 89, 70, 45, 60, 58, 60];
+            int count = 0;
+            for (int i= 0;i< arr.Length;i++)
+            {
+                if (arr[i]>40)
+                    count++;
+            }
+            int[] brr=new int[count];
+            int index = 0;
+            for (int i = 0; i < arr.Length; i++)
+            {
+                if (arr[i] > 40)
+                {
+                    brr[index] = arr[i];
+                    index++;
+                }
+            }
+            Array.Sort(brr);
+            Array.Reverse(brr);
+            foreach (int i in brr)
+            {
+                Console.Write(i+" ");
+            }
+        }
+    }
+}
+// ouput:
+98 89 78 70 67 67 60 60 58 45 45
+```c#
+- with linq:
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace LINQProject
+{
+    internal class Class1
+    {
+        static void Main(string[] args)
+        {
+
+
+            int[] arr = [12, 34, 67, 23, 78, 45, 67, 98, 2, 89, 70, 45, 60, 58, 60];
+            var brr = from i in arr where i > 40 orderby i descending select i;
+            foreach (var i in brr)
+            {
+                Console.Write(i+" ");
+            }
+        }
+    }
+}
+// output:
+98 89 78 70 67 67 60 60 58 45 45
+
+```
+
+- ### LINQ to SQL:
+    - LINQ to Objects: we can write queries on Arrays, Collections etc
+    - LINQ to Databases: Data Tables, Relational Dtabase Tables
+         - Linq to ADO.Net
+         - Linq to Sql
+         - Linq to Entities - used for diff servers like oracle etlc
+    - LINQ to XML: XML Files
+- ![alt text](image-97.png)
+    - Linq to sql is used only purley for only sql server
+    - Linq to sql is not only about querying the data but also allows us to perform insert, update and delete operations also as CRUD operations.
+    - we can also call stored procedures by using Linq to Sql
+    - Already there is a language know as SQl using which we can interact with sql server with the help of ADO.Net
+    - If we already have sql to interact with server why do we need linq to sql 
+    - SQL => SQL Server : if we are using sql to interact with sql server means it is ADO.Net
+       - 1. Runtime syantax checking of sql stmts.
+             - means when we write the sql queries in our code the syntax is checked by the db engine not the c# compiler coz we write then in "sql query".
+       - 2. Not type safe
+       - 3. No Intellisense Support
+       - 4. debugging of sql stmts is not possible : since sql stmts execute on db enginee so 
+       - 5. code is a combination of oo and relational
+    - LINQ => SQL Server : means linq to sql
+        - 1. Compile - time syntax checking.
+              - since we write linq in c# so c# will complie the code
+        - 2. Type safe
+        - 3. Intellisense support is available
+        - 4. Debugging of linq stms are possible 
+        - 5. pure object oriented code : since linq is pure c#
+        - in linq we don't have tables we have classes, table will become class
+- ![alt text](image-98.png)
+
+- To work with linq tosql first we need to convert all the realtional objects of dtabase into object oriented types and this process is know as ORM(Object Relational Mapping).
+- To perform ORM we are provided with a tool know as OR designer
+- #### OR(Object-Relational) Designer:
+- ![alt text](image-99.png)
+
+- we have to connect the visual stuido with ssms 
+        1. crete a table in ssms and
+        2. after opening the project in vs -> tools -> connect database -> give server name from the ssms -> tick the trust certificate -> select the db and connect
+- ![alt text](image-100.png)
+
+- so now to manage the the data in the db with link we need to use orm
+- how to perform the orm: 
+- ![alt text](image-101.png)
+- 
+
+
+
+
+
+
+
+
+
+
+
+---------------------------------------------------------------------------------------
+
+# RestSharp:
+- RestSharp is a popular HTTP client library in C# that's commonly used for testing and interacting with RESTful APIs.
+
+- steps:
+  1. open vs create a new project with class libabry
+  2. right click on sol explorer-> manage NuGet package-> browese-> restSharp, Newtonsoft.json-> install both
+  3. create a new interface
+       - why we use Task<RestResponse>: The reason for using Task<RestResponse> in your IApiClient interface is to support asynchronous programming in C#
+```c#
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using RestSharp;
+
+namespace API.Automation
+{
+    public interface IApiClient
+    {
+       Task<RestResponse> CreateUser<T>(Task payload) where T:class;
+        Task<RestResponse> UpdateUser<T>(T payload, string id) where T : class;
+        Task<RestResponse> DeleteUser( string id) ;
+        Task<RestResponse> GetUser( string id);
+        Task<RestResponse> GetListofUsers(int pageNumber);
+    }
+}
+```
+   4. create a new class for end points 
+      - end points will be listed here
+   5. Implement the interface by creating a class 
+      - why to implement IDisposable: Restsharp internally use httpclient so dispose wrpped HITP client instance we use this 
+      - RestClient is the main class in RestSharp used to send HTTP requests to an API and receive responses.
+
+
+```c#
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using RestSharp;
+
+namespace API.Automation
+{
+    public class APIClient : IApiClient, IDisposable
+    {
+        readonly RestClient client;
+        public APIClient(string baseUrl)
+        {
+            var options=new RestClientOptions(baseUrl);
+            client=new RestClient(options);
+        }
+        public async Task<RestResponse> CreateUser<T>(Task payload) where T : class
+        {
+            var request = new RestRequest(EndPoints.CREAT_USER, Method.Post);
+            request.AddBody(payload);
+            return await client.ExecuteAsync<T>(request);
+        }
+
+        public async Task<RestResponse> DeleteUser(string id)
+        {
+            var request = new RestRequest(EndPoints.DELETE_USER, Method.Delete);
+            request.AddUrlSegment(id, id);
+            return await client.ExecuteAsync(request);
+        }   
+
+        public void Dispose()
+        {
+            client?.Dispose();
+            GC.SuppressFinalize(this);
+        }
+
+        public async Task<RestResponse> GetListofUsers(int pageNumber)
+        {
+            var request=new RestRequest(EndPoints.GET_LIST_OF_USER, Method.Get);
+            request.AddQueryParameter("page", pageNumber);
+            return await client.ExecuteAsync(request);
+        }
+
+        public async Task<RestResponse> GetUser(string id)
+        {
+            var request = new RestRequest(EndPoints.GET_SINGLE_USER, Method.Get);
+            request.AddUrlSegment(id, id);
+            return await client.ExecuteAsync(request);
+
+        }
+        public async Task<RestResponse> UpdateUser<T>(T payload, string id) where T : class
+        {
+            var request = new RestRequest(EndPoints.UPDATE_USER, Method.Put);
+            request.AddUrlSegment(id, id);
+            request.AddBody(payload);
+            return await client.ExecuteAsync<T>(request);
+        }
+    }
+}
+
+
+
+```
+   6. adding models -> createa folder medels -> in this model add again 2 seperate folders request and response
+   7. In the response folder create a class-ListOfUsers-> edit->paste special -> paste json as class
+
+
+
+✅ Interface – IApiClient
+This defines what actions your API client must support (like creating, updating, deleting users). You're saying:
+
+"Any class that implements this interface must provide these methods."
+
+✅ Implementation – APIClient
+This is the actual class that uses RestSharp to perform those HTTP actions. It connects to your API using a base URL and sends real HTTP requests.
+
+✅ Endpoints – EndPoints class
+This stores all your endpoint paths in one place to avoid hardcoding strings multiple times. It makes your code easier to maintain.
+
+
+- Authorization - OAuth 2.0 is the protocol for the authorization
+    - there are diff ways to authenticate restapis
+    - JWT- json web token
+    - To implement authentication for restsharp
+    - createa an auth folder -> crate a class in it
+
+------------------------------------------------------------------------------
+# Specflow:
+- Specflow - popular BDD(Behavioural driven dev) frame work for .net
+- 
+
+
+---------------------------------------------------------------------------------
+
+# Why Automation Testing: 
+- ![alt text](image-102.png)
+- ![alt text](image-103.png)
+- ![alt text](image-104.png)
+- ![alt text](image-105.png)
+- ![alt text](image-106.png)
+- ![alt text](image-107.png)
