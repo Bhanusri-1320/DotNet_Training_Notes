@@ -4931,11 +4931,1797 @@ This stores all your endpoint paths in one place to avoid hardcoding strings mul
 
 
 ---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
 
-# Why Automation Testing: 
+# Automation Testing- selenium:
+## Why Automation Testing: 
+- repetative and time-cosuming taks
+- improves accuracy 
+- faster
 - ![alt text](image-102.png)
 - ![alt text](image-103.png)
 - ![alt text](image-104.png)
 - ![alt text](image-105.png)
 - ![alt text](image-106.png)
+- community support is better for java than the c#
 - ![alt text](image-107.png)
+- to download selenium in our project -> after creating the NUittestproject -> right click add nuGet-> selenium downalod
+- wrting the First selenium Test code: 
+- how to run : test->test explorer -> right click on Test1 -> run
+- ![alt text](image-108.png)
+```c#
+using OpenQA.Selenium;
+using OpenQA.Selenium.Chrome;
+
+namespace DotnetSelenum
+{
+    public class Tests
+    {
+        [SetUp]
+        public void Setup()
+        {
+        }
+
+        [Test]
+        public void Test1()
+        {
+            // sudo code for setting up selenium
+            // 1. create a new instance of selenium web driver
+
+            IWebDriver driver = new ChromeDriver();// interacting with chrome driver
+
+            // 2. navigate to the url
+
+            driver.Navigate().GoToUrl("https://www.google.com/");
+
+            // 2a. maximize the browser window
+            // 3. type in the element
+            // 4. type in the element
+            // 5. clcik on the element
+        }
+    }
+}
+// to open the crome
+```
+- if the chrome browser is not installed in our sytem it will open the chorimum
+
+```c#
+using OpenQA.Selenium;
+using OpenQA.Selenium.Chrome;
+
+namespace DotnetSelenum
+{
+    public class Tests
+    {
+        [SetUp]
+        public void Setup()
+        {
+        }
+
+        [Test]
+        public void Test1()
+        {
+            // sudo code for setting up selenium
+            // 1. create a new instance of selenium web driver
+
+            IWebDriver driver = new ChromeDriver();// interacting eith chrome driver
+
+            // 2. navigate to the url
+
+            driver.Navigate().GoToUrl("https://www.google.com/");
+
+            // 2a. maximize the browser window
+
+            driver.Manage().Window.Maximize();
+
+            // 3. find the element
+
+            IWebElement webElement = driver.FindElement(By.Name("q"));
+
+            // 4. type in the element
+
+            webElement.SendKeys("selenium"); // typying selenium
+            // 5. clcik on the element
+            webElement.SendKeys(Keys.Return); // pressing enter key 
+        }
+    }
+}
+```
+- Selenium Methods:
+- reference - selenium c# api documentation
+- ![alt text](image-109.png)
+
+- #### Working with Locators:
+- ![alt text](image-110.png) 
+- ![alt text](image-111.png)
+- ![alt text](image-112.png)
+- ![alt text](image-113.png)
+- automating the login page
+```c#
+using OpenQA.Selenium;
+using OpenQA.Selenium.Chrome;
+
+namespace DotnetSelenum
+{
+    public class Tests
+    {
+        [SetUp]
+        public void Setup()
+        {
+        }
+
+        [Test]
+        public void Test1()
+        {
+            // sudo code for setting up selenium
+            // 1. create a new instance of selenium web driver
+
+            IWebDriver driver = new ChromeDriver();// interacting eith chrome driver
+
+            // 2. navigate to the url
+
+            driver.Navigate().GoToUrl("https://www.google.com/");
+
+            // 2a. maximize the browser window
+
+            driver.Manage().Window.Maximize();
+
+            // 3. find the element
+
+            IWebElement webElement = driver.FindElement(By.Name("q"));
+
+            // 4. type in the element
+
+            webElement.SendKeys("selenium");
+            // 5. clcik on the element
+            webElement.SendKeys(Keys.Return);
+        }
+
+        [Test]
+        public void EAWebSiteTest()
+        {
+            // 1. create a new instance of selenium web driver
+            IWebDriver driver = new ChromeDriver();
+            // 2. navigate to the URL
+            driver.Navigate().GoToUrl("http://eaapp.somee.com/");
+            // maximize the window
+            driver.Manage().Window.Maximize();
+            // 4. find the login link
+            IWebElement loginLink = driver.FindElement(By.Id("loginLink")); 
+            // 4. click the login
+            loginLink.Click();
+            // 5. find the username filed
+            IWebElement userName = driver.FindElement(By.Id("UserName"));
+            // 6. send the value to the filed
+            userName.SendKeys("Admin1");
+            // 7. find the password filed
+            IWebElement password = driver.FindElement(By.Id("Password"));
+            // send the password
+            password.SendKeys("Admin@12345");
+            // 8. find login button
+            IWebElement logIn = driver.FindElement(By.Id("loginIn"));
+            // 9. click on login
+            logIn.Click();
+
+
+
+        }
+    }
+}
+```
+- we can easily find the id/name/link/ etc for locators but when we have className we can't directly keep it like the others
+- we need to do somethings
+- ![alt text](image-114.png)
+- so while using the class name we should not use dot as kept in the above img
+- Using css selector
+- simpley keep the dot infront of the class name and change the selector to classname 
+```c#
+// 8. find login button using class name
+//IWebElement logIn = driver.FindElement(By.ClassName("btn"));
+// 8. find login button using css selector
+IWebElement logInCssSele = driver.FindElement(By.CssSelector(".btn"));
+// 9. click on login
+//logIn.Submit();
+logInCssSele.Click();
+```
+
+```c#
+using OpenQA.Selenium;
+using OpenQA.Selenium.Chrome;
+
+namespace DotnetSelenum
+{
+    public class Tests
+    {
+        [SetUp]
+        public void Setup()
+        {
+        }
+
+        [Test]
+        public void Test1()
+        {
+            // sudo code for setting up selenium
+            // 1. create a new instance of selenium web driver
+
+            IWebDriver driver = new ChromeDriver();// interacting eith chrome driver
+
+            // 2. navigate to the url
+
+            driver.Navigate().GoToUrl("https://www.google.com/");
+
+            // 2a. maximize the browser window
+
+            driver.Manage().Window.Maximize();
+
+            // 3. find the element
+
+            IWebElement webElement = driver.FindElement(By.Name("q"));
+
+            // 4. type in the element
+
+            webElement.SendKeys("selenium");
+            // 5. clcik on the element
+            webElement.SendKeys(Keys.Return);
+        }
+
+        [Test]
+        public void EAWebSiteTest()
+        {
+            // 1. create a new instance of selenium web driver
+            IWebDriver driver = new ChromeDriver();
+            // 2. navigate to the URL
+            driver.Navigate().GoToUrl("http://eaapp.somee.com/");
+            // maximize the window
+            driver.Manage().Window.Maximize();
+            // 4. find the login link
+            IWebElement loginLink = driver.FindElement(By.Id("loginLink")); 
+            // 4. click the login
+            loginLink.Click();
+            // 5. find the username filed
+            IWebElement userName = driver.FindElement(By.Id("UserName"));
+            // 6. send the value to the filed
+            userName.SendKeys("Admin1");
+            // 7. find the password filed
+            IWebElement password = driver.FindElement(By.Name("Password"));
+            // send the password
+            password.SendKeys("Admin@12345");
+            // 8. find login button using class name
+            //IWebElement logIn = driver.FindElement(By.ClassName("btn"));
+            // 8. find login button using css selector
+            IWebElement logInCssSele = driver.FindElement(By.CssSelector(".btn"));
+            // 9. click on login
+            //logIn.Submit();
+            logInCssSele.Click();
+
+
+
+        }
+    }
+}
+```
+- we can reduce the size of the code instead of finding and lcicking we can find and click in one step
+```c#
+   // reduced size of the code
+   [Test]
+   public void EAWebSiteTestReduceSizeCode()
+   {
+       // 1. create a new instance of selenium web driver
+       IWebDriver driver = new ChromeDriver();
+       // 2. navigate to the URL
+       driver.Navigate().GoToUrl("http://eaapp.somee.com/");
+       // 3. maximize the window
+       driver.Manage().Window.Maximize();
+       // 4. find the login link and click
+        driver.FindElement(By.Id("loginLink")).Click();
+       // 5. find the username filed and send keys
+       driver.FindElement(By.Id("UserName")).SendKeys("Admin1");
+   ;
+       // 6. find the password filed and send the password
+      driver.FindElement(By.Name("Password")).SendKeys("Admin@12345");
+ 
+       // 7a. find login button using class name
+       // driver.FindElement(By.ClassName("btn")).click();
+       // 7b. find login button using css selector and submit
+       driver.FindElement(By.CssSelector(".btn")).Submit();
+      
+   }
+
+```
+
+- #### Intercating with UI Elements:
+    - ##### Dropdown:
+    - install selenium support
+       - select the parent first - driver.findelement(By.Id("dropdown));
+       - selectelement se=new selectelement(driver.findelement(By.Id("dropdown)));
+       - se.selectByText("Option 1");
+       - se.selectByValue("option 1");
+       - se.selectByIndex(0);
+       - so we can select by using the above options
+
+```c#
+[Test]
+public void WorkingWithAdvancedControls()
+{
+    // 1. create a new instance of selenium web driver
+    IWebDriver driver = new ChromeDriver();
+    // 2. navigate to the URL
+    driver.Navigate().GoToUrl("http://127.0.0.1:5500/index.html?textbox=&dropdown=Option+1&multiselect=Multi+1&multiselect=Multi+2&multiselect=Multi+3&checkbox1=on&checkbox2=on&checkbox3=on&gender=male#");
+    // 3. maximize the window
+    driver.Manage().Window.Maximize();
+    // 4. drop down selection
+    //driver.FindElement(By.Id("dropdown"));
+    SelectElement selectElement = new SelectElement(driver.FindElement(By.Id("dropdown")));
+    selectElement.SelectByText("Option 3");
+
+}
+```
+- ##### for multi select:
+     - same as dropdown but we have to select multiple values 
+```c#
+
+            // multi select
+            SelectElement multiSelect = new SelectElement(driver.FindElement(By.Name("multiselect")));
+            multiSelect.SelectByValue("Multi1");
+            multiSelect.SelectByValue("Multi2");
+```
+- lets say here in dropdown/multi select if we want to get the options that what are selected then we have to use a AllSelectedOptions property
+```c#
+
+            // multi select
+            SelectElement multiSelect = new SelectElement(driver.FindElement(By.Name("multiselect")));
+            multiSelect.SelectByValue("Multi1");
+            multiSelect.SelectByValue("Multi2");
+            IList<WebElement> selectedOption= (IList<WebElement>)multiSelect.AllSelectedOptions;
+            foreach(WebElement option in selectedOption)
+            {
+                Console.WriteLine(option.Text);
+            }
+    
+```
+- radio button
+```c#
+// radio button click
+driver.FindElement(By.Id("male"));
+```
+
+- ### Writing custom methods for selenium UI actions:
+     - 1. Method should get the locator
+     - 2. Start getting the type of identifier
+     - 3. Perform operations on the locator
+```c#
+// method:
+using OpenQA.Selenium;
+
+namespace DotnetSelenum
+{
+    public class SeleniumCustomMethods
+    {
+     // 1. Method should get the locator
+     // 2. Start getting the type of identifier
+     // 3. Perform operations on the locator
+
+        public static void Click(IWebDriver driver, By locator)
+        {
+            driver.FindElement(locator).Click();
+        }
+    }
+}
+
+
+// using the method:
+    [Test]
+    public void EAWebSiteTestReduceSizeCode()
+    {
+        // 1. create a new instance of selenium web driver
+        IWebDriver driver = new ChromeDriver();
+        // 2. navigate to the URL
+        driver.Navigate().GoToUrl("http://eaapp.somee.com/");
+        // 3. maximize the window
+        driver.Manage().Window.Maximize();
+
+        // 4. find the login link and click
+        //driver.FindElement(By.Id("loginLink")).Click();
+        // using slelnium custom files
+        SeleniumCustomMethods.Click(driver, By.Id("loginLink"));
+
+        // 5. find the username filed and send keys
+        driver.FindElement(By.Id("UserName")).SendKeys("Admin1");
+    ;
+        // 6. find the password filed and send the password
+       driver.FindElement(By.Name("Password")).SendKeys("Admin@12345");
+  
+        // 7a. find login button using class name
+        // driver.FindElement(By.ClassName("btn")).click();
+        // 7b. find login button using css selector and submit
+        driver.FindElement(By.CssSelector(".btn")).Submit();
+       
+    }
+```
+
+- writing entertext method:
+```c#
+// custom method
+public static void EnterText(IWebDriver driver, By locator, string text)
+{
+    driver.FindElement(locator).Clear();// clearing the text box
+    driver.FindElement(locator).SendKeys(text); // entering the text
+}
+
+
+// using the mthod
+  public void EAWebSiteTest()
+  {
+      // 1. create a new instance of selenium web driver
+      IWebDriver driver = new ChromeDriver();
+      // 2. navigate to the URL
+      driver.Navigate().GoToUrl("http://eaapp.somee.com/");
+      // maximize the window
+      driver.Manage().Window.Maximize();
+      // 4. find the login link
+      IWebElement loginLink = driver.FindElement(By.Id("loginLink")); 
+      // 4. click the login
+      loginLink.Click();
+      // 5. find the username filed
+      //IWebElement userName = driver.FindElement(By.Id("UserName"));
+      //// 6. send the value to the filed
+      //userName.SendKeys("Admin1");
+      // by using customized method
+      SeleniumCustomMethods.EnterText(driver, By.Id("UserName"), "Admin1");
+
+      //// 7. find the password filed
+      //IWebElement password = driver.FindElement(By.Name("Password"));
+      //// send the password
+      //password.SendKeys("Admin@12345");
+      SeleniumCustomMethods.EnterText(driver, By.Name("Password"), "Admin@12345");
+
+      // 8. find login button using class name
+      //IWebElement logIn = driver.FindElement(By.ClassName("btn"));
+      // 8. find login button using css selector
+      IWebElement logInCssSele = driver.FindElement(By.CssSelector(".btn"));
+      // 9. click on login
+      //logIn.Submit();
+      logInCssSele.Click();
+  }
+```
+
+- select dropdown by text
+
+```c#
+// custome method
+  public static void SelectDropDownByText(IWebDriver driver, By locator, string text)
+  {
+      SelectElement selectElement = new SelectElement(driver.FindElement(locator));
+      selectElement.SelectByText(text);
+  }
+  public static void SelectDropDownByIndex(IWebDriver driver, By locator, int index)
+  {
+      SelectElement selectElement = new SelectElement(driver.FindElement(locator));
+      selectElement.SelectByIndex(index);
+  }
+
+// using the custome method
+     public void WorkingWithAdvancedControls()
+     {
+         // 1. create a new instance of selenium web driver
+         IWebDriver driver = new ChromeDriver();
+         // 2. navigate to the URL
+         driver.Navigate().GoToUrl("http://127.0.0.1:5500/index.html?textbox=&dropdown=Option+1&multiselect=Multi+1&multiselect=Multi+2&multiselect=Multi+3&checkbox1=on&checkbox2=on&checkbox3=on&gender=male#");
+         // 3. maximize the window
+         driver.Manage().Window.Maximize();
+         // 4. drop down selection
+         //driver.FindElement(By.Id("dropdown"));
+         //SelectElement selectElement = new SelectElement(driver.FindElement(By.Id("dropdown")));
+         //selectElement.SelectByText("Option 3");
+         // dropdown selection with custom method
+         SeleniumCustomMethods.SelectDropDownByText(driver, By.Id("dropdown"), "Option 3");
+
+
+         // selectin by index
+         //SelectElement multiSelect = new SelectElement(driver.FindElement(By.Name("multiselect")));
+         //multiSelect.SelectByIndex(1);
+         //multiSelect.SelectByIndex(2);
+         // selecting the dropdown by index with custom method
+         SeleniumCustomMethods.SelectDropDownByIndex(driver, By.Name("multiselect"), 1);
+         SeleniumCustomMethods.SelectDropDownByIndex(driver, By.Name("multiselect"), 2);
+
+
+         //IList<WebElement> selectedOption = (IList<WebElement>)multiSelect.AllSelectedOptions;
+         //foreach (WebElement option in selectedOption)
+         //{
+         //    Console.WriteLine(option.Text);
+         //}
+
+         // radio button click
+         driver.FindElement(By.Id("male"));
+
+       
+
+     }
+```
+- for multi-select working  implementing with array
+
+```c#
+ public static void SelectDropDownByIndex(IWebDriver driver, By locator, int[] index)
+ {
+     SelectElement selectElement = new SelectElement(driver.FindElement(locator));
+     foreach (int i in index)
+     {
+         selectElement.SelectByIndex(i);
+     }
+ }
+
+             SeleniumCustomMethods.SelectDropDownByIndex(driver, By.Name("multiselect"), [1,2]);
+
+```
+
+- #### POM- Page Object Model 
+- ![alt text](image-115.png)
+- ![alt text](image-116.png)
+- so in the above example we have hard coded values like the locators
+- so when there is any change in them like dev want to change the case of the letters or name etc
+- so when there is any change we have to go back into the test and change every where.
+- so if we write the code in the and all the locators in a seperate class file like page object class file something like below img so that only the page object code needs updating not the tests.
+- ![alt text](image-117.png)
+- so after moving the code it will looks like this
+- ![alt text](image-118.png)
+- ![alt text](image-119.png)
+- in this class file we will not only locate the locators but we also write the actions like clicking, we are abstarcting all the code in this class file
+- the Login page class
+```c#
+using OpenQA.Selenium;
+
+namespace DotnetSelenum.Pages
+{
+    public class LoginPage
+    {
+        private readonly IWebDriver driver;
+        public LoginPage(IWebDriver driver)
+        {
+            this.driver = driver;
+        }
+        IWebElement LoginLink => driver.FindElement(By.Id("loginLink"));
+        // or the above line means to write like below
+        //IWebElement LoginLink
+        //{
+        //    get
+        //    {
+        //        driver.FindElement(By.Id("loginLink"));
+        //    }
+        //}
+
+        IWebElement TxtUser => driver.FindElement(By.Id("UserName"));
+        IWebElement TxtPassword=>driver.FindElement(By.Id("Password"));
+        IWebElement BtnLogin => driver.FindElement(By.CssSelector(".btn"));
+
+        public void ClickLogin()
+        {
+            LoginLink.Click();
+        }
+
+        public void Login(String userName, string password)
+        {
+            TxtUser.SendKeys(userName);
+            TxtPassword.SendKeys(password);
+            BtnLogin.Click();
+        }
+
+    }
+}
+
+```
+- using the login page pom in test 
+```c#
+
+        // working with page object model (POM)
+        [Test]
+        public void EAWebSiteTest3()
+        {
+            // 1. create a new instance of selenium web driver
+            IWebDriver driver = new ChromeDriver();
+            // 2. navigate to the URL
+            driver.Navigate().GoToUrl("http://eaapp.somee.com/");
+            // maximize the window
+            driver.Manage().Window.Maximize();
+
+            // POM initialization
+            LoginPage loginPage=new LoginPage(driver);
+            // clicks the login link
+            loginPage.ClickLogin();
+            // entering the login details and clicking the submit button
+            loginPage.Login("Admin1", "Admin@12345");
+
+        }
+```
+- so with this it became very redable and understood easily and short
+- writing my own github login test automation
+```c#
+
+        // Git-hub login page testing
+
+        [Test]
+        public void GitHubSiteTest()
+        {
+            IWebDriver driver = new ChromeDriver();
+            driver.Navigate().GoToUrl("https://github.com/login");
+            driver.Manage().Window.Maximize();
+            // normal way of doing it
+            //driver.FindElement(By.Name("login")).SendKeys("bhanusrigangadevi2003@gmail.com");
+            //driver.FindElement(By.Id("password")).SendKeys("BhanuRavi@2003");
+            //driver.FindElement(By.ClassName("btn")).Submit();
+            // doing with pom
+            GitHubLoginPage gitHubLoginPage=new GitHubLoginPage(driver);
+            gitHubLoginPage.ClickSignIn("bhanusrigangadevi2003@gmail.com","BhanuRavi@2003");
+
+        }
+```
+
+```c#
+using OpenQA.Selenium;
+
+namespace DotnetSelenum.Pages
+{
+    public class GitHubLoginPage
+    {
+        private readonly IWebDriver driver;
+        public GitHubLoginPage(IWebDriver driver)
+        {
+            this.driver = driver;
+        }
+        IWebElement TxtuserName => driver.FindElement(By.Name("login"));
+        IWebElement Txtpassword => driver.FindElement(By.Id("password"));
+        IWebElement SignInBtn => driver.FindElement(By.ClassName("btn"));
+
+        public void ClickSignIn(string userName, string password)
+        {
+            TxtuserName.SendKeys(userName);
+            Txtpassword.SendKeys(password);
+            SignInBtn.Submit();
+        }
+
+    }
+}
+```
+
+- #### Extending Custom methods for selenium:
+- ![alt text](image-120.png)
+- ![alt text](image-121.png)
+- ![alt text](image-122.png)
+- so in the custome methods we are passing 3 parameters every time like for every method
+- so instaed of that with extended methods we can pass only one parameter and we can get rid of others
+- by modifying the customemethods file we can reuse them in the pom page methods
+```c#
+// change in the custome methods
+using OpenQA.Selenium;
+using OpenQA.Selenium.Support.UI;
+
+namespace DotnetSelenum
+{
+    public class SeleniumCustomMethods
+    {
+        // 1. Method should get the locator
+        // 2. Start getting the type of identifier
+        // 3. Perform operations on the locator
+        // using custome methods
+        //public static void Click(IWebDriver driver, By locator)
+        //{
+        //    driver.FindElement(locator).Click();
+        //}
+        // using extended custome methods
+        public static void Click(IWebElement locator)
+        {
+            locator.Click();
+        }
+        public static void Submit(IWebElement locator)
+        {
+            locator.Submit();
+        }
+
+        //public static void EnterText(IWebDriver driver, By locator, string text)
+        //{
+        //    driver.FindElement(locator).Clear();// clearing the text box
+        //    driver.FindElement(locator).SendKeys(text); // entering the text
+        //}
+
+        // using extended method
+        public static void EnterText(IWebElement locator, string text)
+        {
+            locator.Clear();// clearing the text box
+            locator.SendKeys(text); // entering the text
+        }
+
+        public static void SelectDropDownByText(IWebDriver driver, By locator, string text)
+        {
+            SelectElement selectElement = new SelectElement(driver.FindElement(locator));
+            selectElement.SelectByText(text);
+        }
+        public static void SelectDropDownByIndex(IWebDriver driver, By locator, int[] index)
+        {
+            SelectElement selectElement = new SelectElement(driver.FindElement(locator));
+            foreach (int i in index)
+            {
+                selectElement.SelectByIndex(i);
+            }
+        }
+
+    }
+}
+
+// login page changes
+using OpenQA.Selenium;
+
+namespace DotnetSelenum.Pages
+{
+    public class LoginPage
+    {
+        private readonly IWebDriver driver;
+        public LoginPage(IWebDriver driver)
+        {
+            this.driver = driver;
+        }
+        IWebElement LoginLink => driver.FindElement(By.Id("loginLink"));
+        // or the above line means to write like below
+        //IWebElement LoginLink
+        //{
+        //    get
+        //    {
+        //        driver.FindElement(By.Id("loginLink"));
+        //    }
+        //}
+
+        IWebElement TxtUser => driver.FindElement(By.Id("UserName"));
+        IWebElement TxtPassword => driver.FindElement(By.Id("Password"));
+        IWebElement BtnLogin => driver.FindElement(By.CssSelector(".btn"));
+
+        public void ClickLogin()
+        {
+            //LoginLink.Click();
+            SeleniumCustomMethods.Click(LoginLink);
+        }
+
+        public void Login(String userName, string password)
+        {
+            //TxtUser.SendKeys(userName);
+            //TxtPassword.SendKeys(password);
+            //BtnLogin.Click();
+            SeleniumCustomMethods.EnterText(TxtUser, userName);
+            SeleniumCustomMethods.EnterText(TxtPassword, password);
+            SeleniumCustomMethods.Submit(BtnLogin);
+
+        }
+
+    }
+}
+
+// test
+    // working with page object model (POM)
+    [Test]
+    public void EAWebSiteTest3()
+    {
+        // 1. create a new instance of selenium web driver
+        IWebDriver driver = new ChromeDriver();
+        // 2. navigate to the URL
+        driver.Navigate().GoToUrl("http://eaapp.somee.com/");
+        // maximize the window
+        driver.Manage().Window.Maximize();
+
+        // POM initialization
+        LoginPage loginPage = new LoginPage(driver);
+        // clicks the login link
+        loginPage.ClickLogin();
+        // entering the login details and clicking the submit button
+        loginPage.Login("Admin1", "Admin@12345");
+
+    }
+ // Git-hub login page testing
+
+ [Test]
+ public void GitHubSiteTest()
+ {
+     IWebDriver driver = new ChromeDriver();
+     driver.Navigate().GoToUrl("https://github.com/login");
+     driver.Manage().Window.Maximize();
+     // normal way of doing it
+     //driver.FindElement(By.Name("login")).SendKeys("bhanusrigangadevi2003@gmail.com");
+     //driver.FindElement(By.Id("password")).SendKeys("BhanuRavi@2003");
+     //driver.FindElement(By.ClassName("btn")).Submit();
+     // doing with pom
+     GitHubLoginPage gitHubLoginPage = new GitHubLoginPage(driver);
+     gitHubLoginPage.ClickSignIn("bhanusrigangadevi2003@gmail.com", "BhanuRavi@2003");
+
+ }
+ ```
+
+ - ##### Using extension method in custom methods:
+ - ![alt text](image-123.png)
+ - means instaed of using the namespace and ,ethod directly we have to use method name how is it possible?
+ - ![alt text](image-124.png)
+ - ![alt text](image-125.png)
+ ```c#
+    public void Login(String userName, string password)
+   {
+       //TxtUser.SendKeys(userName);
+       //TxtPassword.SendKeys(password);
+       //BtnLogin.Click();
+       SeleniumCustomMethods.EnterText(TxtUser, userName);
+       SeleniumCustomMethods.EnterText(TxtPassword, password);
+       SeleniumCustomMethods.Submit(BtnLogin);
+
+   }
+```
+ - here instead of using the custome methods in the pom we ca direclt use like this right?
+ ```c#
+   //TxtUser.SendKeys(userName);
+       //TxtPassword.SendKeys(password);
+       //BtnLogin.Click();
+```
+- so to solve this problem like instead of writing the big code we can just use method name directly using extension methods
+
+### Note: we have used custome methods first, then pom and custome methods in pom and converting the custom methods into extension methods and using them in pom class methods.
+
+```c#
+// custome extension method:
+using OpenQA.Selenium;
+using OpenQA.Selenium.Support.UI;
+
+namespace DotnetSelenum
+{
+    public static class SeleniumCustomMethods
+    {
+        // 1. Method should get the locator
+        // 2. Start getting the type of identifier
+        // 3. Perform operations on the locator
+        // using custome methods
+        //public static void Click(IWebDriver driver, By locator)
+        //{
+        //    driver.FindElement(locator).Click();
+        //}
+        // using extended custome methods
+        public static void Click(this IWebElement locator)
+        {
+            locator.Click();
+        }
+        public static void Submit(this IWebElement locator)
+        {
+            locator.Submit();
+        }
+
+        //public static void EnterText(IWebDriver driver, By locator, string text)
+        //{
+        //    driver.FindElement(locator).Clear();// clearing the text box
+        //    driver.FindElement(locator).SendKeys(text); // entering the text
+        //}
+
+        // using extended method
+        public static void EnterText(this IWebElement locator, string text)
+        {
+            locator.Clear();// clearing the text box
+            locator.SendKeys(text); // entering the text
+        }
+    }
+}
+
+// pom login page
+using OpenQA.Selenium;
+
+namespace DotnetSelenum.Pages
+{
+    public class LoginPage
+    {
+        private readonly IWebDriver driver;
+        public LoginPage(IWebDriver driver)
+        {
+            this.driver = driver;
+        }
+        IWebElement LoginLink => driver.FindElement(By.Id("loginLink"));
+        // or the above line means to write like below
+        //IWebElement LoginLink
+        //{
+        //    get
+        //    {
+        //        driver.FindElement(By.Id("loginLink"));
+        //    }
+        //}
+
+        IWebElement TxtUser => driver.FindElement(By.Id("UserName"));
+        IWebElement TxtPassword => driver.FindElement(By.Id("Password"));
+        IWebElement BtnLogin => driver.FindElement(By.CssSelector(".btn"));
+
+        public void ClickLogin()
+        {
+            //LoginLink.Click();
+            //SeleniumCustomMethods.Click(LoginLink);
+            LoginLink.Click();
+        }
+
+        public void Login(String userName, string password)
+        {
+            // pom
+            //TxtUser.SendKeys(userName);
+            //TxtPassword.SendKeys(password);
+            //BtnLogin.Click();
+
+            // using custom method
+            //SeleniumCustomMethods.EnterText(TxtUser, userName);
+            //SeleniumCustomMethods.EnterText(TxtPassword, password);
+            //SeleniumCustomMethods.Submit(BtnLogin);
+
+            // using extended custome method
+            TxtUser.EnterText(userName);
+            TxtPassword.EnterText(password);
+            BtnLogin.Submit();
+
+        }
+
+    }
+}
+
+```
+
+- ##### Record and plyaback with selenium ide and use chatgpt for POM code:
+    - Till now we are using selenium webdriver and we can also use selenium IDE to record and playback of interactions with browser in chrome, firefox and edge.
+    - download selenium ide:
+       - edge-> download selenium ide -> extensions -> click on sleenium ide -> record a new test in a new project -> give Project name -> Base URL - http://eaapp.somee.com -> srart recording
+       - after recording the video we can run the test case
+       - we can also export the code -> select C# NUnit
+       - give the exported code to the chatgpt with below instructions
+- ![alt text](image-126.png)
+- ## NUnit:
+- NUnit: is a unit-testing frame work for all .NET languages
+       - we write [Test] -> we call this as attribute 
+       - NUnit has many attributes if we want we can go through documentation
+- #### NUnit Attributes:
+- we are writing  some lines of code in each of the test like creating instance and opening broweser and maximizing instead of writing every where we can write all of them in a seperate class in the set up
+- writing code in the setup attribute
+```c#
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using DotnetSelenum.Pages;
+using OpenQA.Selenium;
+using OpenQA.Selenium.Chrome;
+
+namespace DotnetSelenum
+{
+    public class NUnitTestDemo
+    {
+        private IWebDriver _driver;
+
+        [SetUp]
+        public void setUp()
+        {
+            _driver = new ChromeDriver();
+            _driver.Navigate().GoToUrl("http://eaap.somee.com");
+            _driver.Manage().Window.Maximize();
+        }
+
+
+        // working with page object model (POM)
+        [Test]
+        public void EAWebSiteTest3()
+        {
+            //// 1. create a new instance of selenium web driver
+            //IWebDriver driver = new ChromeDriver();
+            //// 2. navigate to the URL
+            //driver.Navigate().GoToUrl("http://eaapp.somee.com/");
+            //// maximize the window
+            //driver.Manage().Window.Maximize();
+
+            // POM initialization
+            LoginPage loginPage = new LoginPage(_driver);
+            // clicks the login link
+            loginPage.ClickLogin();
+            // entering the login details and clicking the submit button
+            loginPage.Login("Admin1", "Admin@12345");
+
+        }
+        // another attribute of the NUnit 
+            [TearDown]
+        public void TearDown()
+          { 
+         _driver.Quit();
+          }
+
+    }
+}
+
+```
+- TestFixture: NUnit attribute
+- [TestFixture(Author="Bhanu")]
+- [TestFixture("admin", "password")] // for the login of the website we can give the userName and password here then the hole code will use this username and password
+- but to do that we need to create a constructor
+```c#
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using DotnetSelenum.Pages;
+using OpenQA.Selenium;
+using OpenQA.Selenium.Chrome;
+
+namespace DotnetSelenum
+{
+    [TestFixture("Admin1","Admin@12345")]
+    public class NUnitTestDemo
+    {
+        private IWebDriver _driver;
+        private readonly string _userName;
+        private readonly string _password;
+        public NUnitTestDemo(string userName, string password)
+        {
+            this._userName = userName;
+            this._password = password;
+        }
+
+        [SetUp]
+        public void setUp()
+        {
+            _driver = new ChromeDriver();
+            _driver.Navigate().GoToUrl("http://eaap.somee.com");
+            _driver.Manage().Window.Maximize();
+        }
+
+
+        // working with page object model (POM)
+        [Test]
+        public void EAWebSiteTest3()
+        {
+            //// 1. create a new instance of selenium web driver
+            //IWebDriver driver = new ChromeDriver();
+            //// 2. navigate to the URL
+            //driver.Navigate().GoToUrl("http://eaapp.somee.com/");
+            //// maximize the window
+            //driver.Manage().Window.Maximize();
+
+            // POM initialization
+            LoginPage loginPage = new LoginPage(_driver);
+            // clicks the login link
+            loginPage.ClickLogin();
+            // entering the login details and clicking the submit button
+            loginPage.Login(_userName, _password);
+
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+                _driver.Quit();
+        }
+    }
+}
+```
+- if we give the values multiple times then the test executes for that many time with each diff values
+- so here the test executes for 2 times
+```c#
+ [TestFixture("Admin2", "Admin@12345")]
+ [TestFixture("Admin3", "Admin@12345")]
+ ```
+ - TestCase- another attribute of NUnit:
+ - we can pass the test case data from this attribute like
+ ```c#
+
+ // test case 
+     [Test]
+    [TestCase("chrome", "30")]
+
+    public void TestBrowserVersion(string browser, string version)
+    {
+        Console.WriteLine($"The browser is {browser} with version  {version}");
+    }
+
+
+
+        //[TearDown]
+        //public void TearDown()
+        //{
+        //        _driver.Quit();
+        //}
+        [TearDown]
+        public void TearDown()
+        {
+            if (_driver != null)
+            {
+                _driver.Quit();    // Closes the browser and disposes the driver
+                _driver.Dispose(); // Optional, but good practice
+                _driver = null;
+            }
+        }
+```
+
+- to execute the test cases with terminal 
+- open the project in terminal-> dotnet test(to run all test cases)
+- to do smoke testing:  use category attribute in the test and use the cmd "dotnet test --filter "Category=smoke"
+
+```c#
+       [Test]
+       [Category("smoke")] // will only execute the test with this tag
+       public void EAWebSiteTest3()
+       {
+           //// 1. create a new instance of selenium web driver
+           //IWebDriver driver = new ChromeDriver();
+           //// 2. navigate to the URL
+           //driver.Navigate().GoToUrl("http://eaapp.somee.com/");
+           //// maximize the window
+           //driver.Manage().Window.Maximize();
+
+           // POM initialization
+           LoginPage loginPage = new LoginPage(_driver);
+           // clicks the login link
+           loginPage.ClickLogin();
+           // entering the login details and clicking the submit button
+           loginPage.Login(userName, password);
+
+       }
+
+```
+
+- ### Data Driven Testing using NUnit:
+- if we want to pass the username and password wihtout textfixture we can use TestCaseSource like below: 
+- create a new class for type with below prop
+```c#
+namespace DotnetSelenum
+{
+    public class LoginModel
+    {
+        public string UserName { get; set; }
+        public string Password { get; set; }
+    }
+}
+```
+```c#
+using DotnetSelenum.Pages;
+using OpenQA.Selenium.Chrome;
+
+namespace DotnetSelenum
+{
+    public class DataDrivenTesting
+    {
+
+        public class NUnitTestDemo
+        {
+            private ChromeDriver _driver;
+
+            [SetUp]
+            public void setUp()
+            {
+                _driver = new ChromeDriver();
+                _driver.Navigate().GoToUrl("http://eaapp.somee.com/");
+                _driver.Manage().Window.Maximize();
+            }
+
+
+            // working with page object model (POM)
+            [Test]
+            [Category("ddt")]
+            [TestCaseSource(nameof(Login))]
+            public void EAWebSiteTest3(LoginModel loginModel)
+            {
+                //// 1. create a new instance of selenium web driver
+                //IWebDriver driver = new ChromeDriver();
+                //// 2. navigate to the URL
+                //driver.Navigate().GoToUrl("http://eaapp.somee.com/");
+                //// maximize the window
+                //driver.Manage().Window.Maximize();
+
+                // POM initialization
+                LoginPage loginPage = new LoginPage(_driver);
+                // clicks the login link
+                loginPage.ClickLogin();
+                // entering the login details and clicking the submit button
+                loginPage.Login(loginModel.UserName, loginModel.Password);
+
+            }
+
+            public static IEnumerable<LoginModel> Login()
+            {
+                yield return new LoginModel()
+                {
+                    UserName = "Admin1",
+                    Password = "Admin@12345"
+                };
+            }
+
+            [TearDown]
+            public void TearDown()
+            {
+                if (_driver != null)
+                {
+                    _driver.Quit();    // Closes the browser and disposes the driver
+                    _driver.Dispose(); // Optional, but good practice
+                    _driver = null;
+                }
+            }
+
+        }
+    }
+}
+
+```
+- if we want to send the more login details like one time with one credntials
+- so here it runs with 3 diff details one after the other
+```c#
+  public static IEnumerable<LoginModel> Login()
+  {
+      yield return new LoginModel()
+      {
+          UserName = "Admin1",
+          Password = "Admin@12345"
+      };
+       yield return new LoginModel()
+      {
+          UserName = "Admin2",
+          Password = "Admin@12345"
+      };
+       yield return new LoginModel()
+      {
+          UserName = "Admin3",
+          Password = "Admin@12345"
+      };
+  }
+  ```
+  - lets say instead of hard coding the values lets say the credentials are in the json file and we have to take from that
+  - steps: read the JSON -> parse the JSON -> and deserializetion of Data -> using the data
+  - to make the json file accessble-> right click on JSON file -> properties -> copy output- copy always.
+  1. to read the JSON file writing a private method- 
+       - the json file is there in the bin directory 
+       - string jsonFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "login.json");
+       - AppDomain.CurrentDomain.BaseDirectory - represents the bin folder
+```c#
+using System.Text.Json;
+using DotnetSelenum.Pages;
+using OpenQA.Selenium.Chrome;
+
+namespace DotnetSelenum
+{
+    public class DataDrivenTesting
+    {
+
+        public class NUnitTestDemo
+        {
+            private ChromeDriver _driver;
+
+            [SetUp]
+            public void setUp()
+            {
+                _driver = new ChromeDriver();
+                _driver.Navigate().GoToUrl("http://eaapp.somee.com/");
+                _driver.Manage().Window.Maximize();
+                ReadJsonFile();
+            }
+
+
+            // reading the json data
+            private void ReadJsonFile()
+            {
+                // locating the file
+                string jsonFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "login.json");
+                // reading the data
+                var jsonString = File.ReadAllText(jsonFilePath);
+                // deserialize the json data
+                // deserializing the json string to login model
+                var loginModel = JsonSerializer.Deserialize<LoginModel>(jsonString);
+                Console.WriteLine($"UserName: {loginModel.UserName} Password: {loginModel.Password}");
+            }
+
+
+
+            // working with page object model (POM)
+            [Test]
+            [Category("ddt")]
+            //[TestCaseSource(nameof(Login))]
+            public void TestWithPOMWithJsonData()
+            {
+                //// 1. create a new instance of selenium web driver
+                //IWebDriver driver = new ChromeDriver();
+                //// 2. navigate to the URL
+                //driver.Navigate().GoToUrl("http://eaapp.somee.com/");
+                //// maximize the window
+                //driver.Manage().Window.Maximize();
+
+                // locating the file
+                string jsonFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "login.json");
+                // reading the data
+                var jsonString = File.ReadAllText(jsonFilePath);
+                // deserialize the json data
+                // deserializing the json string to login model
+                var loginModel = JsonSerializer.Deserialize<LoginModel>(jsonString);
+
+                // POM initialization
+                LoginPage loginPage = new LoginPage(_driver);
+                // clicks the login link
+                loginPage.ClickLogin();
+                // entering the login details and clicking the submit button
+                loginPage.Login(loginModel.UserName, loginModel.Password);
+
+            }
+
+            public static IEnumerable<LoginModel> Login()
+            {
+                yield return new LoginModel()
+                {
+                    UserName = "Admin1",
+                    Password = "Admin@12345"
+                };
+            }
+
+            // with json data
+            public static IEnumerable<LoginModel> LoginJsonDatSource()
+            {
+                yield return new LoginModel()
+                {
+                    UserName = "Admin1",
+                    Password = "Admin@12345"
+                };
+            }
+
+            [TearDown]
+            public void TearDown()
+            {
+                if (_driver != null)
+                {
+                    _driver.Quit();    // Closes the browser and disposes the driver
+                    _driver.Dispose(); // Optional, but good practice
+                    _driver = null;
+                }
+            }
+
+        }
+    }
+}
+
+```
+
+- by the data from the json file
+
+```c#
+using System.Text.Json;
+using DotnetSelenum.Pages;
+using OpenQA.Selenium.Chrome;
+
+namespace DotnetSelenum
+{
+    public class DataDrivenTesting
+    {
+
+        public class NUnitTestDemo
+        {
+            private ChromeDriver _driver;
+
+            [SetUp]
+            public void setUp()
+            {
+                _driver = new ChromeDriver();
+                _driver.Navigate().GoToUrl("http://eaapp.somee.com/");
+                _driver.Manage().Window.Maximize();
+                ReadJsonFile();
+            }
+
+
+            // reading the json data
+            private void ReadJsonFile()
+            {
+                // locating the file
+                string jsonFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "login.json");
+                // reading the data
+                var jsonString = File.ReadAllText(jsonFilePath);
+                // deserialize the json data
+                // deserializing the json string to login model
+                var loginModel = JsonSerializer.Deserialize<LoginModel>(jsonString);
+                Console.WriteLine($"UserName: {loginModel.UserName} Password: {loginModel.Password}");
+            }
+
+
+
+            // working with page object model (POM)
+            [Test]
+            [Category("ddt")]
+            [TestCaseSource(nameof(LoginJsonDatSource))]
+            public void TestWithPOMWithJsonData(LoginModel loginModel)
+            {
+                //// 1. create a new instance of selenium web driver
+                //IWebDriver driver = new ChromeDriver();
+                //// 2. navigate to the URL
+                //driver.Navigate().GoToUrl("http://eaapp.somee.com/");
+                //// maximize the window
+                //driver.Manage().Window.Maximize();
+
+                //// locating the file
+                //string jsonFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "login.json");
+                //// reading the data
+                //var jsonString = File.ReadAllText(jsonFilePath);
+                //// deserialize the json data
+                //// deserializing the json string to login model
+                //var loginModel = JsonSerializer.Deserialize<LoginModel>(jsonString);
+
+                // POM initialization
+                LoginPage loginPage = new LoginPage(_driver);
+                // clicks the login link
+                loginPage.ClickLogin();
+                // entering the login details and clicking the submit button
+                loginPage.Login(loginModel.UserName, loginModel.Password);
+
+            }
+
+            public static IEnumerable<LoginModel> Login()
+            {
+                yield return new LoginModel()
+                {
+                    UserName = "Admin1",
+                    Password = "Admin@12345"
+                };
+            }
+
+            public static IEnumerable<LoginModel> LoginJsonDatSource()
+            {
+                // locating the file
+                string jsonFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "login.json");
+                // reading the data
+                var jsonString = File.ReadAllText(jsonFilePath);
+                // deserialize the json data
+                // deserializing the json string to login model
+                var loginModel = JsonSerializer.Deserialize<LoginModel>(jsonString);
+                yield return loginModel;
+            }
+
+            [TearDown]
+            public void TearDown()
+            {
+                if (_driver != null)
+                {
+                    _driver.Quit();    // Closes the browser and disposes the driver
+                    _driver.Dispose(); // Optional, but good practice
+                    _driver = null;
+                }
+            }
+
+        }
+    }
+}
+
+// login.json file
+{
+    "UserName": "Admin1",
+    "Password": "Admin@12345"
+}
+
+// loginModel class file
+namespace DotnetSelenum
+{
+    public class LoginModel
+    {
+        public string UserName { get; set; }
+        public string Password { get; set; }
+    }
+}
+
+
+```
+
+- lets say if the json file has an array of items then:
+- change only in the below method
+
+```c#
+ public static IEnumerable<LoginModel> LoginJsonDatSource()
+ {
+     // locating the file
+     string jsonFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "login.json");
+     // reading the data
+     var jsonString = File.ReadAllText(jsonFilePath);
+     // deserialize the json data
+     // deserializing the json string to login model
+     var loginModel = JsonSerializer.Deserialize<List<LoginModel>>(jsonString);
+     foreach (var loginData in loginModel)
+     {
+         yield return loginData;
+     }
+ }
+ ```
+ ----------------------------------------------------------------
+ - ### ARRANGE/ACT/ASSERT:
+ - In eaapp.some.com web site when we login successfuly it will shows the employeeDetails, logoff and ManageUsers like many other things so if they exit means the login is success full is this is how we do assertion.
+ - How to perform the assertion to verify the login is verified successfully or not
+ - we should not write any assertions in POM file
+ - In POM we check that if the login is successfull or not 
+ ```c#
+ // pom page file
+ using OpenQA.Selenium;
+
+namespace DotnetSelenum.Pages
+{
+    public class LoginPage
+    {
+        private readonly IWebDriver driver;
+        public LoginPage(IWebDriver driver)
+        {
+            this.driver = driver;
+        }
+        IWebElement LoginLink => driver.FindElement(By.Id("loginLink"));
+        // or the above line means to write like below
+        //IWebElement LoginLink
+        //{
+        //    get
+        //    {
+        //        driver.FindElement(By.Id("loginLink"));
+        //    }
+        //}
+
+        IWebElement TxtUser => driver.FindElement(By.Id("UserName"));
+        IWebElement TxtPassword => driver.FindElement(By.Id("Password"));
+        IWebElement BtnLogin => driver.FindElement(By.CssSelector(".btn"));
+        IWebElement LinkEmployeeDetails => driver.FindElement(By.LinkText("Employee List"));
+        IWebElement LinkLogOff => driver.FindElement(By.LinkText("Log Off"));
+
+
+        public void ClickLogin()
+        {
+            //LoginLink.Click();
+            //SeleniumCustomMethods.Click(LoginLink);
+            LoginLink.Click();
+        }
+
+        public void Login(String userName, string password)
+        {
+            // pom
+            //TxtUser.SendKeys(userName);
+            //TxtPassword.SendKeys(password);
+            //BtnLogin.Click();
+
+            // using custom method
+            //SeleniumCustomMethods.EnterText(TxtUser, userName);
+            //SeleniumCustomMethods.EnterText(TxtPassword, password);
+            //SeleniumCustomMethods.Submit(BtnLogin);
+
+            // using extended custome method
+            TxtUser.EnterText(userName);
+            TxtPassword.EnterText(password);
+            BtnLogin.Submit();
+
+        }
+
+        public bool IsLoggedIn()
+        {
+            return LinkLogOff.Displayed;
+        }
+    }
+}
+
+// test file
+using System.Text.Json;
+using DotnetSelenum.Pages;
+using OpenQA.Selenium.Chrome;
+
+namespace DotnetSelenum
+{
+    public class DataDrivenTesting
+    {
+
+        public class NUnitTestDemo
+        {
+            private ChromeDriver _driver;
+
+            [SetUp]
+            public void setUp()
+            {
+                _driver = new ChromeDriver();
+                _driver.Navigate().GoToUrl("http://eaapp.somee.com/");
+                _driver.Manage().Window.Maximize();
+            }
+
+
+            // reading the json data
+            private void ReadJsonFile()
+            {
+                // locating the file
+                string jsonFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "login.json");
+                // reading the data
+                var jsonString = File.ReadAllText(jsonFilePath);
+                // deserialize the json data
+                // deserializing the json string to login model
+                var loginModel = JsonSerializer.Deserialize<LoginModel>(jsonString);
+                Console.WriteLine($"UserName: {loginModel.UserName} Password: {loginModel.Password}");
+            }
+
+
+
+            // working with page object model (POM)
+            [Test]
+            [Category("ddt")]
+            [TestCaseSource(nameof(LoginJsonDatSource))]
+            public void TestWithPOMWithJsonData(LoginModel loginModel)
+            {
+                //// 1. create a new instance of selenium web driver
+                //IWebDriver driver = new ChromeDriver();
+                //// 2. navigate to the URL
+                //driver.Navigate().GoToUrl("http://eaapp.somee.com/");
+                //// maximize the window
+                //driver.Manage().Window.Maximize();
+
+                //// locating the file
+                //string jsonFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "login.json");
+                //// reading the data
+                //var jsonString = File.ReadAllText(jsonFilePath);
+                //// deserialize the json data
+                //// deserializing the json string to login model
+                //var loginModel = JsonSerializer.Deserialize<LoginModel>(jsonString);
+
+                // POM initialization
+                // Arrange
+                LoginPage loginPage = new LoginPage(_driver);
+
+                // clicks the login link
+                // Act
+                loginPage.ClickLogin();
+                // entering the login details and clicking the submit button
+                loginPage.Login(loginModel.UserName, loginModel.Password);
+
+
+                //Assert
+                var getLoggedIn = loginPage.IsLoggedIn();
+                Assert.IsTrue( getLoggedIn );
+            }
+
+            public static IEnumerable<LoginModel> Login()
+            {
+                yield return new LoginModel()
+                {
+                    UserName = "Admin1",
+                    Password = "Admin@12345"
+                };
+            }
+
+            public static IEnumerable<LoginModel> LoginJsonDatSource()
+            {
+                // locating the file
+                string jsonFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "login.json");
+                // reading the data
+                var jsonString = File.ReadAllText(jsonFilePath);
+                // deserialize the json data
+                // deserializing the json string to login model
+                var loginModel = JsonSerializer.Deserialize<List<LoginModel>>(jsonString);
+                foreach (var loginData in loginModel)
+                {
+                    yield return loginData;
+                }
+            }
+
+            [TearDown]
+            public void TearDown()
+            {
+                if (_driver != null)
+                {
+                    _driver.Quit();    // Closes the browser and disposes the driver
+                    _driver.Dispose(); // Optional, but good practice
+                    _driver = null;
+                }
+            }
+
+        }
+    }
+}
+
+```
+- ##### Assert Multiple Elemets returned with Tuples:
+- how we return 2 diff elements in one method
+- we can return 2 in 2 diff methods but thats not a good practise of coding
+```c#
+// pom page file
+ public (bool EmployeeDetails,bool LogOff) IsLoggedIn()
+ {
+     return (LinkLogOff.Displayed, LinkEmployeeDetails.Displayed);
+ }
+
+ // test file
+    Assert.IsTrue( getLoggedIn.EmployeeDetails && getLoggedIn.LogOff );
+```
+-------------------------------------------------------------------------
+- ## Implementing Automatic RETRY of WebElementd:
+- In c# we don't have automatic wait 
+- ![alt text](image-127.png)
+- To do automatic retry we haev to use POLLY.NET library
+- What is Auto-Wait?
+- When you run a test, sometimes the webpage is slow to show buttons or fields. If your test tries to click or type before those things appear, it will fail.
+- Auto-Wait means telling Selenium:
+- “Hey, wait a little bit until the thing I want is ready, then do the action.”
+- 1. Implicit Wait Example
+This sets a global wait time that applies to every element Selenium tries to find.
+
+
+```c#
+csharp
+Copy
+using OpenQA.Selenium;
+using OpenQA.Selenium.Chrome;
+using System;
+
+class ImplicitWaitExample
+{
+    static void Main()
+    {
+        IWebDriver driver = new ChromeDriver();
+
+        try
+        {
+            // Set implicit wait of 10 seconds for all element searches
+            driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
+
+            driver.Navigate().GoToUrl("http://eaapp.somee.com");
+            driver.Manage().Window.Maximize();
+
+            // Find and click the login link (waits up to 10 seconds if needed)
+            driver.FindElement(By.LinkText("Login")).Click();
+
+            // Enter username and password (waits up to 10 seconds if elements not found immediately)
+            driver.FindElement(By.Id("UserName")).SendKeys("Admin1");
+            driver.FindElement(By.Id("Password")).SendKeys("Admin@12345");
+
+            // Click submit button
+            driver.FindElement(By.CssSelector("input[type='submit']")).Click();
+
+            Console.WriteLine("Login test passed with implicit wait!");
+        }
+        finally
+        {
+            driver.Quit();
+        }
+    }
+}
+```
+- How it works:
+- If any element (like the login link, username box, etc.) isn’t immediately available, Selenium will wait up to 10 seconds before throwing an error.
+
+2. Explicit Wait Example
+This waits for specific conditions on specific elements before proceeding.
+
+```c#
+csharp
+Copy
+using OpenQA.Selenium;
+using OpenQA.Selenium.Chrome;
+using OpenQA.Selenium.Support.UI;
+using SeleniumExtras.WaitHelpers;  // For ExpectedConditions
+using System;
+
+class ExplicitWaitExample
+{
+    static void Main()
+    {
+        IWebDriver driver = new ChromeDriver();
+
+        try
+        {
+            driver.Navigate().GoToUrl("http://eaapp.somee.com");
+            driver.Manage().Window.Maximize();
+
+            WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
+
+            // Wait for login link to be clickable and click it
+            IWebElement loginLink = wait.Until(ExpectedConditions.ElementToBeClickable(By.LinkText("Login")));
+            loginLink.Click();
+
+            // Wait for username textbox to be visible and enter username
+            IWebElement username = wait.Until(ExpectedConditions.ElementIsVisible(By.Id("UserName")));
+            username.SendKeys("Admin1");
+
+            // Wait for password textbox to be visible and enter password
+            IWebElement password = wait.Until(ExpectedConditions.ElementIsVisible(By.Id("Password")));
+            password.SendKeys("Admin@12345");
+
+            // Wait for submit button to be clickable and click it
+            IWebElement submitButton = wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("input[type='submit']")));
+            submitButton.Click();
+
+            Console.WriteLine("Login test passed with explicit wait!");
+        }
+        finally
+        {
+            driver.Quit();
+        }
+    }
+}
+```
+- How it works:
+- Before each action, Selenium waits specifically until that element is ready (clickable or visible) before proceeding.
+
