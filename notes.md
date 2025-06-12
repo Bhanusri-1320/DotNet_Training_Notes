@@ -6725,3 +6725,480 @@ class ExplicitWaitExample
 - How it works:
 - Before each action, Selenium waits specifically until that element is ready (clickable or visible) before proceeding.
 
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# BDD With ReqnRoll:
+- Reqnroll is a tool used in software testing. It helps testers and developers write tests in a readable, easy-to-understand language—usually plain English.
+- Think of it like this:
+- You describe how your app should behave using simple sentences.
+- Reqnroll connects those sentences to actual code that tests your app.
+- Read those steps
+- Match them to test code behind the scenes
+- Run the test to make sure the app works as expected
+- It’s part of a practice called BDD (Behavior Driven Development), where the focus is on how the software should behave, from the user's point of view.
+- ![alt text](image-128.png)
+- When we want to test an application we write the test cases in an excel sheet with the requirements
+- when automating the test cases they use the tools to automate and the excel as base
+- ![alt text](image-129.png)
+- In BDD with reqnroll we don't write the test cases in excel but in a feature file
+- ![alt text](image-130.png)
+- In BDD we use gherkins like when we want to automate a website then we write the cases in normal english statements
+- Given - navigate to the particular site and click login button
+- when - i enter the username and password
+- then - i see the home page
+- we have to add the reqnroll extension in visualstusio and create a new prj
+- then it will implictly having a feature file which has gherkins format like this
+
+```c#
+Feature: Calculator
+
+Simple calculator for adding two numbers
+
+@mytag
+Scenario: Add two numbers
+	Given the first number is 50
+	And the second number is 70
+	When the two numbers are added
+	Then the result should be 120
+```
+- in the step defination file it has c# code
+
+- Lets test the login:
+           - create a feature file and write the steps
+```c#
+Feature: Login
+
+Testing the login feature of application
+
+@login
+Scenario: Test login with valid credentials
+	Given I click the login link
+	When I enter the username as "Admin1" and password as "Admin@12345" 
+	And I click login button
+	Then I should be logged in 
+```
+         -  right click on this file and define steps -> create -> it will create a file then we can write the c# code in that methods
+         - binding attribute is like a glu/gel b/w feature and step defination file
+         - lets say we have another scenario in the same feature file how do we write it:
+```c#
+Feature: Login
+
+Testing the login feature of application
+
+@login
+Scenario: Test login with valid credentials
+	Given I click the login link
+	When I enter the username as "Admin1" and password as "Admin@12345" 
+	And I click login button
+	Then I should be logged in 
+
+
+@login
+Scenario: Test login with Invalid credentials
+	Given I click the login link
+	When I enter the username as "Admin1" and password as "InvalidPassword" 
+	And I click login button
+	Then I should be logged in 
+```
+ - we can write but the scenario should not be same they can be different
+ - lets say we want to write the login with diff credentials like correct/incorrect/admin etc
+ - then we need to write more number of test cases, so instaed of thet we can write the scenario outline like below
+
+```c#
+	@login
+Scenario Outline: Test login with Multiple credentials
+	Given I click the login link
+	When I enter the <username> and <password>
+	And I click login button
+	Then I should be logged in
+ 
+	Examples: 
+	    | username | password |
+		| admin    | password |
+		| situser  | password |
+		| uatuser  | password |
+		| produser | password |
+```
+- for the above scenario the defination file will be 
+```c#
+
+        [When("I enter the (.*) and (.*)")]
+        public void WhenIEnterTheAdminAndPassword(string userName, string password)
+        {
+            Console.WriteLine("I enter the username as "+userName +" and password as "+password);
+        }
+```
+- so here the (.*) is a regular expression means we can pass any value 
+- after this when we build the there will be errors coz in the defination file we are taking the regualr expresion but the previous test scenarios are not using like that
+
+```c#
+Feature: Login
+ 
+Testing the login feature of application
+ 
+@login
+Scenario: Test login with valid credentials
+	Given I click the login link
+	When I enter the username as "Admin1" and password as "Admin@12345" 
+	And I click login button
+	Then I should be logged in
+
+
+@login
+Scenario: Test login with Invalid credentials
+	Given I click the login link
+	When I enter the username as "Admin" and password as "InvalidPassword" 
+	And I click login button
+	Then I should be logged in
+
+
+@login
+Scenario Outline: Test login with Multiple credentials
+	Given I click the login link
+	When I enter  <username> and <password>
+	And I click login button
+	Then I should be logged in
+ 
+	Examples: 
+	    | username | password |
+		| admin    | password |
+		| situser  | password |
+		| uatuser  | password |
+		| produser | password |
+    
+
+    // step defination file
+
+    using System;
+using Reqnroll;
+
+namespace ReqnrollProject1.StepDefinitions
+{
+    [Binding]
+    public class LoginStepDefinitions
+    {
+        [Given("I click the login link")]
+        public void GivenIClickTheLoginLink()
+        {
+            Console.WriteLine("I click the login link");
+        }
+
+        [When("I enter the username as {string} and password as {string}")]
+        public void WhenIEnterTheUsernameAsAndPasswordAs(string admin, string password)
+        {
+            Console.WriteLine($"{admin}, {password}");
+        }
+
+        [When("I click login button")]
+        public void WhenIClickLoginButton()
+        {
+            Console.WriteLine("I click the login button");
+        }
+
+        [Then("I should be logged in")]
+        public void ThenIShouldBeLoggedIn()
+        {
+            Console.WriteLine("I should be logged in ");
+        }
+
+        [When("I enter  (.*) and (.*)")]
+        public void WhenIEnterTheAdminAndPassword(string userName, string password)
+        {
+            Console.WriteLine("I enter the username as "+userName +" and password as "+password);
+        }
+
+    }
+}
+```
+- now the error is gone coz the stmts should not be same as outline one 
+- Gherkin Keywords : Feature
+- we can wrap some scenarios into one rule just for readability
+Rule: 
+   This scenario below are specific for the MVP realse
+   scenario1
+   scenario2
+- Background: when we have some repeative steps like click the login link
+            - that steps is there is every test means we can keep thet in this kw
+            - before every scenario this will be executed
+```c#
+Feature: Login
+ 
+Testing the login feature of application
+ 
+ Rule: 
+    This scenario below are specific for the MVP realse
+
+ Background: 
+	    Given I click the login link
+@login
+Scenario: Test login with valid credentials
+	When I enter the username as "Admin1" and password as "Admin@12345" 
+	And I click login button
+	Then I should be logged in
+
+
+@login
+Scenario: Test login with Invalid credentials
+	When I enter the username as "Admin" and password as "InvalidPassword" 
+	And I click login button
+	Then I should be logged in
+
+
+@login
+Scenario Outline: Test login with Multiple credentials
+	When I enter  <username> and <password>
+	And I click login button
+	Then I should be logged in
+ 
+	Examples: 
+	    | username | password |
+		| admin    | password |
+		| situser  | password |
+		| uatuser  | password |
+		| produser | password |
+```
+
+- we can also create the background for only a specific rule like inside rule if we use backgroud keyword then the cases under the rule only will have that background
+- ![alt text](image-131.png)
+- here the inside backgroud is only applied to the scenarios inside the rule
+```c#
+ Feature: Login
+ 
+Testing the login feature of application
+ 
+
+Background: 
+	Given I click the login link
+
+Rule: This scenario below are specific for the MVP realse
+        Background: I navigate to the eaapp.some.com
+        @logins
+        Scenario: Test login with valid credentials
+        	When I enter the username as "Admin1" and password as "Admin@12345" 
+        	And I click login button
+        	Then I should be logged in
+
+         @login
+         Scenario: Test login with Invalid credentials
+	          When I enter the username as "Admin" and password as "InvalidPassword" 
+	          And I click login button
+	          Then I should be logged in
+
+
+Rule: This scenario below is specific for prod realse         
+@login
+Scenario Outline: Test login with Multiple credentials
+	When I enter  <username> and <password>
+	And I click login button
+	Then I should be logged in
+ 
+	Examples: 
+	    | username | password |
+		| admin    | password |
+		| situser  | password |
+		| uatuser  | password |
+		| produser | password |
+```
+- if we want to grp scenarios into 2 diff rules we need to use the rule kw to grp them like above code
+- ### Data Table:
+- lets say we write test case for create user we can write like below
+```c#
+Feature: CreateUser
+
+   To test the feature for creating an User
+
+Background: 
+    Given I navigate to the eaapp.somee.com
+    Given I click the login link
+
+@smoke
+Scenario: Creating a new user
+	When I enter the username as "Admin1" and password as "Admin@12345" 
+    And  I click login button
+    And  I click the create new link
+    Then I enter new user details name as "testuser", salary as "10000" and durationsWorked as "2"
+
+```
+- so here we are giving the text data manually but when there is more data to give then that will becomes dificult
+- so to resolve this probelm we have data tables:
+```c#
+Feature: CreateUser
+
+   To test the feature for creating an User
+
+Background: 
+    Given I navigate to the eaapp.somee.com
+    Given I click the login link
+
+@smoke
+Scenario: Creating a new user
+	When I enter the username as "Admin1" and password as "Admin@12345" 
+    And  I click login button
+    And  I click the create new link
+    Then I enter new user details as follows:
+           | Name     | DurationWorked | salary | Grade | Email              |
+           | TestUser | 10             | 10000  | 1     | testuser@gmail.com |
+
+
+```
+- we can use dat tables like above
+- when we create the defination file to this one will have this below as input datatable before we will have string as input and regular expression.
+- 
+```c#
+namespace ReqnrollProject1.StepDefinitions
+{
+    [Binding]
+    public class CreateUserStepDefinitions
+    {
+        [Given("I navigate to the eaapp.somee.com")]
+        public void GivenINavigateToTheEaapp_Somee_Com()
+        {
+            throw new PendingStepException();
+        }
+
+        [When("I click the create new link")]
+        public void WhenIClickTheCreateNewLink()
+        {
+            throw new PendingStepException();
+        }
+
+        [Then("I enter new user details as follows:")]
+        public void ThenIEnterNewUserDetailsAsFollows(DataTable dataTable)
+        {
+            throw new PendingStepException();
+        }
+    }
+}
+```
+- To read the data from Datatable into variable:
+- On the datatable we can perform actions 
+```c#
+namespace ReqnrollProject1.StepDefinitions
+{
+    [Binding]
+    public class CreateUserStepDefinitions
+    {
+        [Given("I navigate to the eaapp.somee.com")]
+        public void GivenINavigateToTheEaapp_Somee_Com()
+        {
+            Console.WriteLine("I naviagete to the website");
+        }
+
+        [When("I click the create new link")]
+        public void WhenIClickTheCreateNewLink()
+        {
+            Console.WriteLine("I click the create new link");
+        }
+
+        [Then("I enter new user details as follows:")]
+        public void ThenIEnterNewUserDetailsAsFollows(DataTable dataTable)
+        {
+            foreach (var row in dataTable.Rows)
+            {
+                Console.WriteLine($"The name of User id {row["Name"]}");
+                Console.WriteLine($"The email of User id {row["Email"]}");
+                Console.WriteLine($"The durationWorked of User id {row["DurationWorked"]}");
+                Console.WriteLine($"The Salary of User id {row["Salary"]}");
+                Console.WriteLine($"The Grade of User id {row["Grade"]}");
+            }
+        }
+    }
+}
+
+```
+- here instead of  getting and printing the data liek above we can also do like:
+    - create a models folder and create a class in that folder 
+```c#
+    namespace ReqnrollProject1.Models
+{
+    public record UserDetails(String Name, String Emial, string DurationWorked, string Salary, String Grade);
+}
+
+```
+   - we can use this as a type in the method:
+```c#
+        // way -2 To read the data from Datatable inot a record or class type
+        var userDetails= dataTable.CreateInstance<UserDetails>();
+        // the above line will convert the datatable data inot usertable type
+        Console.WriteLine($"The name of User id {userDetails.Name}");
+        Console.WriteLine($"The email of User id {userDetails.Emial}");
+        Console.WriteLine($"The durationWorked of User id {userDetails.DurationWorked}");
+        Console.WriteLine($"The Salary of User id {userDetails.Salary}");
+        Console.WriteLine($"The Grade of User id {userDetails.Grade}");
+```
+- so in the above we worked with single row
+- ##### Working on BDD Tables with Multiple Rows: 
+     - if we have data like below:
+```c#
+Feature: CreateUser
+   To test the feature for creating an User
+
+Background: 
+    Given I navigate to the eaapp.somee.com
+    Given I click the login link
+
+@smoke
+Scenario: Creating a new user
+	When I enter the username as "Admin1" and password as "Admin@12345" 
+    And  I click login button
+    And  I click the create new link
+    Then I enter new user details as follows:
+           | Name      | DurationWorked | Salary | Grade | Email              |
+           | TestUser  | 10             | 10000  | 1     | testuser@gmail.com |
+           | TestUser1 | 20             | 2000   | 5     | testuser1@gmail.com |
+           | TestUser2 | 50             | 5000   | 7     | testuser2@gmail.com |
+
+
+```
+- when we have mutiple rows we can use createSet instead of createInstance.
+```c#
+
+        [When("I enter new users details as follows:")]
+        public void WhenIEnterNewUserDetailsAsFollows(DataTable dataTable)
+        {
+            var datas=dataTable.CreateSet<UserDetails>();
+            foreach(var data in datas)
+            {
+                Console.WriteLine($"The name of User id {data.Name}");
+                Console.WriteLine($"The email of User id {data.Emial}");
+                Console.WriteLine($"The durationWorked of User id {data.DurationWorked}");
+                Console.WriteLine($"The Salary of User id {data.Salary}");
+                Console.WriteLine($"The Grade of User id {data.Grade}");
+                Console.writeLine("#############################");
+            }
+        }
+```
+- this will print the all rows data like this
+![alt text](image-132.png)
+
+- ##### Working with Dynamic Tables:
+- While we were using createInstance/createSet we need type every time so instead of defining the type every time how we can do it iwth dynamic type.
+- so here instead of creating a new record and using it we can directly use dynamic like below.
+```c#
+
+        [When("I enter new user details with dynamic datatable as follows:")]
+        public void WhenIEnterNewUserDetailsWithDynamicDatatableAsFollows(DataTable dataTable)
+        {
+            dynamic data = dataTable.CreateDynamicInstance();
+            Console.WriteLine($"The name of User id {data.Name}");
+            Console.WriteLine($"The email of User id {data.Email}");
+            Console.WriteLine($"The durationWorked of User id {data.DurationWorked}");
+            Console.WriteLine($"The Salary of User id {data.Salary}");
+            Console.WriteLine($"The Grade of User id {data.Grade}");
+
+        }
+
+        [When("I enter new users details with dynamic datatable as follows:")]
+        public void WhenIEnterNewUsersDetailsWithDynamicDatatableAsFollows(DataTable dataTable)
+        {
+            dynamic datas= dataTable.CreateDynamicSet();
+            foreach (var data in datas)
+            {
+                Console.WriteLine($"The name of User id {data.Name}");
+                Console.WriteLine($"The email of User id {data.Email}");
+                Console.WriteLine($"The durationWorked of User id {data.DurationWorked}");
+                Console.WriteLine($"The Salary of User id {data.Salary}");
+                Console.WriteLine($"The Grade of User id {data.Grade}");
+            }
+        }
+```
