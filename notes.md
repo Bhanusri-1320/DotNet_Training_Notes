@@ -7202,3 +7202,37 @@ Scenario: Creating a new user
             }
         }
 ```
+
+------------------------------------------------------------------
+
+# Selenium
+- is a tool
+# WebDriver:
+- is a an interface
+IWebDriver->webdriver->chromedriver
+![alt text](image-133.png)
+- # ADV of Selenium:
+- cross platform(crome,edge)
+- supports diff languages(c# etc)
+- scalability: also supports cloud integration
+- # Limitations:
+- doesnot support desktop applications/mobile apps
+- # DataTypes:
+- int,float f1=3.4f, string, bool, double, long, 
+- ![alt text](image-134.png) 
+- # Conditional Statement:
+- if
+- for- looping statement
+- # Class:
+- is a blue print of an object
+- ![alt text](image-135.png)
+- # Inheritance: 
+- ![alt text](image-137.png)
+- ![alt text](image-139.png)
+- we have to use either new/ovveride in child class to get the child class
+- overloading,method hiding, overriding:
+- IWebDriver driver=new ChromeDriver()// 
+- # Interface:
+![alt text](image-140.png)
+- findelement,findelements--> ISearchcontext has these methods
+- coz IWebdriver implements the ISearchcontext
