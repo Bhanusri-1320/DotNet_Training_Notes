@@ -7236,3 +7236,24 @@ IWebDriver->webdriver->chromedriver
 ![alt text](image-140.png)
 - findelement,findelements--> ISearchcontext has these methods
 - coz IWebdriver implements the ISearchcontext
+# Day-2
+- ![alt text](image-141.png)
+- Implecit and Explicit wait
+
+# Day-3:
+- # Syanchronization:
+- ![alt text](image-145.png)
+- like if any item is taking time to load and then the test case fails and to avoid this probelm it will be achieved by wait.
+- ![alt text](image-142.png)
+- Dynamic wait/fluent wait/default wait:
+- ![alt text](image-143.png)
+- every window will have unique session id when any new window is launched in chrome.
+- driver.windowHandle-> will give the all open widnows session ids as the list of string
+- File Upload:
+- by using send keys we can give the absolute path
+- downalod: selenium 4 CDP/ take the downalod path and iteratet the folder with to find that particular downaload.
+- Adding desired capabilities:
+- we will have browser options class we can use then and add.
+- ![alt text](image-144.png)
+- Select Element:
+   - selectbyindex/select by text/name/value etc
