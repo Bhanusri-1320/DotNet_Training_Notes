@@ -7257,3 +7257,169 @@ IWebDriver->webdriver->chromedriver
 - ![alt text](image-144.png)
 - Select Element:
    - selectbyindex/select by text/name/value etc
+
+# Day-4:
+- ![alt text](image-146.png)
+- ![alt text](image-147.png)
+- ![alt text](image-148.png)
+
+- ### Scrolling the page:
+```c#
+using System;
+using System.Xml.Linq;
+using OpenQA.Selenium;
+using OpenQA.Selenium.Edge;
+using OpenQA.Selenium.Interactions;
+using OpenQA.Selenium.Support.UI;
+using Reqnroll;
+using SeleniumExtras.WaitHelpers;
+
+namespace ReqnrollProject_CUP_Practise.StepDefinitions
+{
+    [Binding]
+    public class TestingScenarioStepDefinitions
+    {
+        IWebDriver driver = new EdgeDriver();
+        [Given("the user is in the home page")]
+        public void GivenTheUserIsInTheHomePage()
+        {
+            driver.Navigate().GoToUrl("https://automationexercise.com/");
+            driver.Manage().Window.Maximize();
+        }
+
+        [When("clicks on products")]
+        public void WhenClicksOnProducts()
+        {
+            IWebElement products = driver.FindElement(By.XPath("//i[@class=\"material-icons card_travel\"]"));
+            products.Click();
+        }
+
+        [When("adding the product to cart")]
+        public void WhenAddingTheProductToCart()
+        {
+            IWebElement searchInput = driver.FindElement(By.XPath("//input[@class=\"form-control input-lg\"]"));
+            searchInput.SendKeys("Blue Top");
+            driver.FindElement(By.XPath("//button[@class=\"btn btn-default btn-lg\"]")).Click();
+            IWebElement product = driver.FindElement(By.XPath("//div[@class=\"product-image-wrapper\"]"));
+            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", product);
+            WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
+            wait.Until(ExpectedConditions.ElementToBeClickable(product));
+            Actions action = new Actions(driver);
+            action.MoveToElement(product).Perform();
+            IWebElement addtoCart = driver.FindElement(By.XPath("//a[contains(text(),'Add to cart')]"));
+            wait.Until(ExpectedConditions.ElementToBeClickable(addtoCart));
+            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", addtoCart);
+            //product.Click();
+        }
+
+        [Then("product should add to the cart")]
+        public void ThenProductShouldAddToTheCart()
+        {
+        }
+
+        //[AfterScenario]
+        //public void AfterScenario()
+        //{
+        //    driver.Quit();
+        //}
+
+    }
+}
+
+```
+
+- in this the JaveScriptExevcutor is used to scroll the page unit the product is visible.
+```c#
+  IWebElement product = driver.FindElement(By.XPath("//div[@class=\"product-image-wrapper\"]"));
+  ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", product);
+```
+- ### Types of Waits:
+- when we click a button we should wait unit the some button to be clicked or something to be appeared right
+- so for that we use some kind of waits:
+- Waiting properly in Selenium is very important to ensure your test interacts with the webpage only 
+- when it's ready — avoiding errors like "element not found" or "element not clickable."
+- ##### 🕒 What is a Wait in Selenium?
+- In Selenium, a wait is used to pause the execution of your test until something happens on the web page (like an element becoming visible or clickable).
+- there are 3 types of waits in selenium:
+- | Type                 | Description                                                                         | Applies to                  |
+| -------------------- | ----------------------------------------------------------------------------------- | --------------------------- |
+| 1. **Implicit Wait** | Waits **globally** for every element to appear before throwing an error             | Entire WebDriver session    |
+| 2. **Explicit Wait** | Waits for a **specific condition** for a **specific element**                       | Only the element you define |
+| 3. **Fluent Wait**   | Like explicit wait but with **custom polling intervals**, and can ignore exceptions | Advanced use cases          |
+
+- ### 1. 🕵️‍♂️ Implicit Wait
+```c#
+driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
+```
+- What it does:
+- "Selenium, wait up to 10 seconds for every element to appear before throwing an error."
+
+✅ Good for: Simpler scripts
+❌ Bad if you need more control or different waits for different elements
+
+2. 🔍 Explicit Wait
+```c#
+WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
+wait.Until(ExpectedConditions.ElementToBeClickable(product));
+```
+- What it does:
+"Wait up to 10 seconds for the product element to become clickable."
+
+✅ Best for: Dynamic pages where some elements take time
+✅ Very flexible – you can wait for visibility, clickability, presence, etc.
+
+- Common conditions:
+
+```c#
+ExpectedConditions.ElementIsVisible(By.Id("..."));
+ExpectedConditions.ElementToBeClickable(By.XPath("..."));
+ExpectedConditions.PresenceOfAllElementsLocatedBy(...);
+```
+- 🔁 What is Fluent Wait?
+- Fluent Wait is like a smarter version of waiting.
+
+- It says:
+
+- “Keep checking again and again (every few seconds) until something happens or the time runs out.”
+- It gives you full control over:
+
+- How long to wait (maximum time)
+
+- How often to check (polling interval)
+
+- What errors to ignore while waiting
+
+🧠 Think of it like this:
+Imagine you're waiting for a friend to arrive at your house.
+
+You look out the window every 30 seconds (this is polling).
+
+You’ll keep checking for up to 10 minutes (this is timeout).
+
+If they’re not there yet, you don’t panic – you just check again later (this is ignoring exceptions).
+
+That’s what Fluent Wait does in Selenium!
+
+✅ Real-Life Example in Code (C#):
+```c#
+// Create a Fluent Wait
+DefaultWait<IWebDriver> fluentWait = new DefaultWait<IWebDriver>(driver)
+{
+    Timeout = TimeSpan.FromSeconds(15),             // Wait up to 15 seconds
+    PollingInterval = TimeSpan.FromMilliseconds(500) // Check every 0.5 seconds
+};
+
+// Ignore this error while waiting
+fluentWait.IgnoreExceptionTypes(typeof(NoSuchElementException));
+
+// Now use the wait
+IWebElement element = fluentWait.Until(driver => driver.FindElement(By.Id("someId")));
+```
+
+---------------------------------------------------------------------------------------------------------------------
+
+- ##### To hover an element:
+```c#
+            Actions action = new Actions(driver);
+            action.MoveToElement(product).Perform();
+```
