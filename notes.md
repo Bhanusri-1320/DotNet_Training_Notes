@@ -7423,3 +7423,553 @@ IWebElement element = fluentWait.Until(driver => driver.FindElement(By.Id("someI
             Actions action = new Actions(driver);
             action.MoveToElement(product).Perform();
 ```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+----------------------------------------------------------------------------------------------------------------------------------------------------
+- # C# Basics:
+- ### Types of Parameters:
+       1. Value Parameters(default):
+          - A copy of the value is sent to the method.
+          - Changes in the method don’t affect the original value.
+```c#
+void SayHello(string name) {
+    name = "John"; // change inside method
+    Console.WriteLine("Hello " + name);
+}
+
+string myName = "Alice";
+SayHello(myName);
+Console.WriteLine(myName); // Output: Alice (not changed)
+
+```
+   2. ref Parameter
+       - Sends the original variable.
+       - Method can change the original value.
+       - Variable must be initialized before passing.
+
+```c#
+void DoubleValue(ref int number) {
+    number = number * 2;
+}
+
+int x = 5;
+DoubleValue(ref x);
+Console.WriteLine(x); // Output: 10 (value changed)
+
+```
+
+   3. Out parameter
+       - Used to return values from a method.
+       - You don’t need to initialize the variable before passing.
+       - Method must set the value.
+
+```c#
+void GetValues(out int a, out int b) {
+    a = 10;
+    b = 20;
+}
+
+int x, y;
+GetValues(out x, out y);
+Console.WriteLine(x); // 10
+Console.WriteLine(y); // 20
+
+```
+
+   4. In Parameter(read only ref)
+       - Sends the variable by reference but as read-only.
+       - Method can’t change it.
+```c#
+void PrintNumber(in int num) {
+    Console.WriteLine(num);
+    // num = 10; // ❌ Not allowed
+}
+
+int x = 5;
+PrintNumber(in x); // Output: 5
+
+```
+
+   5. Params Paramters:
+      - Pass multiple values (like an array)
+      - UUseful when the number of inputs may vary
+
+```c#
+void PrintNames(params string[] names) {
+    foreach (string name in names) {
+        Console.WriteLine(name);
+    }
+}
+
+PrintNames("Alice", "Bob", "Charlie");
+// Output: Alice Bob Charlie
+
+```
+   6. Optional Parameters:
+       - You can skip some parameters.
+       - Method uses a default value.
+
+```C#
+void Greet(string name = "Guest") {
+    Console.WriteLine("Hello " + name);
+}
+
+Greet();         // Output: Hello Guest
+Greet("Alice");  // Output: Hello Alice
+
+```
+
+  7. Named Parameters:
+     - You can specify parameter names when calling the method.
+     - Helpful when there are many parameters.
+
+```c#
+void Order(string item, int quantity) {
+    Console.WriteLine("Item: " + item + ", Quantity: " + quantity);
+}
+
+Order(quantity: 3, item: "Apples");
+// Output: Item: Apples, Quantity: 3
+
+```
+
+--------------------------
+
+- ### Types of Constructors:
+    - Default/parameter less Constructors
+    - Paramterized
+    - static- Used to initialize static members.
+    - copy- A constructor that creates a new object by copying another object.
+    - private
+
+```c#
+// copy con
+class Person {
+    public string Name;
+
+    public Person(string name) {
+        Name = name;
+    }
+
+    // Copy constructor
+    public Person(Person other) {
+        Name = other.Name;
+    }
+}
+
+Person p1 = new Person("Alice");
+Person p2 = new Person(p1);
+Console.WriteLine(p2.Name);  // Output: Alice
+
+```
+
+---------------------------------
+
+- ### UpCasting:
+- Upcasting means using a child class object but treating it as a parent class reference.
+```c#
+abstract class Animal {
+    public abstract void Speak();
+}
+
+class Dog : Animal {
+    public override void Speak() {
+        Console.WriteLine("Dog says Woof!");
+    }
+}
+
+class Cat : Animal {
+    public override void Speak() {
+        Console.WriteLine("Cat says Meow!");
+    }
+}
+
+class Program {
+    static void Main() {
+        // ✅ Upcasting
+        Animal a1 = new Dog();  // Child object, parent reference
+        Animal a2 = new Cat();  // Same here
+
+        a1.Speak();  // Output: Dog says Woof!
+        a2.Speak();  // Output: Cat says Meow!
+    }
+}
+
+
+////////////////////////////////////////
+/// 
+abstract class Animal {
+    // Abstract method – must be overridden
+    public abstract void MakeSound();
+
+    // Non-abstract method – has body
+    public void Sleep() {
+        Console.WriteLine("Sleeping...");
+    }
+}
+
+class Dog : Animal {
+    // Must override MakeSound
+    public override void MakeSound() {
+        Console.WriteLine("Woof!");
+    }
+}
+
+class Program {
+    static void Main() {
+        Animal myDog = new Dog();
+
+        myDog.MakeSound(); // Output: Woof!
+        myDog.Sleep();     // Output: Sleeping... (inherited method)
+    }
+}
+
+
+//////////////////////////////////////////////
+/// 
+abstract class Animal {
+    // Non-abstract method, marked virtual so it can be overridden
+    public virtual void Speak() {
+        Console.WriteLine("Animal speaks...");
+    }
+}
+
+class Dog : Animal {
+    // Overriding the virtual method
+    public override void Speak() {
+        Console.WriteLine("Dog says Woof!");
+    }
+}
+
+class Program {
+    static void Main() {
+        // Upcasting: Animal reference, Dog object
+        Animal a = new Dog();
+        a.Speak();  // Output: Dog says Woof!
+    }
+}
+
+```
+
+
+- ### Diff b/w Abstract classes and Interfaces:
+| Feature                 | **Abstract Class**                                           | **Interface**                                                                                 |
+| ----------------------- | ------------------------------------------------------------ | --------------------------------------------------------------------------------------------- |
+| **Syntax**              | `abstract class MyClass`                                     | `interface IMyInterface`                                                                      |
+| **Object creation**     | ❌ Cannot create object                                       | ❌ Cannot create object                                                                        |
+| **Inheritance**         | ✅ Supports **single inheritance** only                       | ✅ Supports **multiple inheritance**                                                           |
+| **Methods**             | Can have **abstract**, **virtual**, and **concrete** methods | Can have **only abstract methods** (before C# 8), or **default implementations** (after C# 8) |
+| **Fields / Variables**  | ✅ Can have fields                                            | ❌ Cannot have fields                                                                          |
+| **Access Modifiers**    | ✅ Can use `public`, `protected`, `private`                   | ❌ All members are `public` by default                                                         |
+| **Constructors**        | ✅ Can have constructors                                      | ❌ Cannot have constructors                                                                    |
+| **Properties & Events** | ✅ Supported                                                  | ✅ Supported                                                                                   |
+| **Use case**            | When you need **common implementation + abstraction**        | When you need **just a contract**                                                             |
+
+
+
+
+
+
+
+
+----------------------------------------------------------------------------------------
+
+- ### Types of Collections:
+
+| Category           | Description                                                    |
+| ------------------ | -------------------------------------------------------------- |
+| **1. Non-Generic** | Can store any type (less type-safe)                            |
+| **2. Generic**     | Type-safe and better performance                               |
+| **3. Specialized** | For special cases like synchronized or thread-safe collections |
+
+- ##### Non_Generic:
+
+| Collection  | Description                         | Example                               |
+| ----------- | ----------------------------------- | ------------------------------------- |
+| `ArrayList` | Resizable array (stores `object`)   | Stores items like `[1, "hello", 3.5]` |
+| `Hashtable` | Key-value pairs (like a dictionary) | Unordered, keys must be unique        |
+| `Stack`     | Last In First Out (LIFO)            | Push and Pop elements                 |
+| `Queue`     | First In First Out (FIFO)           | Enqueue and Dequeue                   |
+
+
+- ##### Generic:
+| Collection                 | Description                                 |
+| -------------------------- | ------------------------------------------- |
+| `List<T>`                  | Resizable array for a specific type         |
+| `Dictionary<TKey, TValue>` | Key-value pairs, fast lookup                |
+| `HashSet<T>`               | Unordered collection with **no duplicates** |
+| `Stack<T>`                 | Generic version of Stack                    |
+| `Queue<T>`                 | Generic version of Queue                    |
+| `SortedList<TKey, TValue>` | Sorted key-value pairs                      |
+
+- ##### Specialized Collection:
+
+| Collection            | Description                                  |
+| --------------------- | -------------------------------------------- |
+| `NameValueCollection` | Stores string key and multiple string values |
+| `StringCollection`    | List of strings                              |
+| `BitVector32`         | Efficient way to store bits                  |
+
+
+
+- #### OOPS:
+| Pillar               | What it Means                                           | Simple Example                                          |
+| -------------------- | ------------------------------------------------------- | ------------------------------------------------------- |
+| **1. Encapsulation** | Hiding internal data and exposing only what’s necessary | Use `private` fields and `public` methods               |
+| **2. Inheritance**   | Reusing code from parent classes                        | `Dog` inherits from `Animal`                            |
+| **3. Polymorphism**  | One action, many forms                                  | `Speak()` method behaves differently in `Dog` and `Cat` |
+| **4. Abstraction**   | Hiding complex logic and showing only the essentials    | Use **abstract classes** or **interfaces**              |
+
+- #### Abstarct classes:
+- ##### Static Keyword:
+    - You don’t need to create an object to use it.
+    - The static keyword means that something belongs to the class itself, not to any object.
+
+- ##### Types of Inheritance:
+
+| Inheritance Type            | Supported in C#   | Description                                                  |
+| --------------------------- | ----------------- | ------------------------------------------------------------ |
+| 1. Single Inheritance       | ✅ Yes             | One child class inherits from one parent class               |
+| 2. Multilevel Inheritance   | ✅ Yes             | Class inherits from a class, which itself inherits another   |
+| 3. Hierarchical Inheritance | ✅ Yes             | Multiple classes inherit from one parent class               |
+| 4. Multiple Inheritance     | ❌ Not directly\*  | Not supported with classes, but possible with **interfaces** |
+| 5. Hybrid Inheritance       | ✅ With interfaces | Combination of two or more types (via interfaces)            |
+
+
+
+| Type         | Description                     | C# Support |
+| ------------ | ------------------------------- | ---------- |
+| Single       | One child, one parent           | ✅ Yes      |
+| Multilevel   | Chain of inheritance            | ✅ Yes      |
+| Hierarchical | One parent, many children       | ✅ Yes      |
+| Multiple     | Many parents (via interfaces)   | ✅ Yes\*    |
+| Hybrid       | Mix of above (using interfaces) | ✅ Yes      |
+
+
+- ##### Interfaces:
+       - An interface is like a contract or blueprint that defines what a class should do, but not how it should do it.
+       - It contains only method signatures (no body).
+       - The class that implements the interface must provide the implementation of all its methods.
+
+- ##### extension methods:
+
+```c#
+public static class StringExtensions {
+    public static int WordCount(this string str) {
+        return str.Split(' ').Length;
+    }
+}
+
+```
+
+- ##### This keyword:
+   - The this keyword refers to the current object (or instance) of a class.
+   
+- ##### Delegates:
+    - A delegate is like a pointer to a method — it holds a reference to a method that can be called later.
+    - You can think of a delegate as a variable that stores a method.
+    - Step 1: Declare a delegate type
+```c#
+delegate void PrintMessage(string message);
+```
+   - Step 2: Create methods matching the delegate signature
+```c#
+class Program {
+    static void ShowMessage(string msg) {
+        Console.WriteLine(msg);
+    }
+
+    static void Main() {
+        // Step 3: Create a delegate instance and assign method
+        PrintMessage pm = ShowMessage;
+
+        // Step 4: Call the method through delegate
+        pm("Hello from delegate!");
+    }
+}
+```
+| What is a delegate?    | A variable that stores references to methods      |
+| ---------------------- | ------------------------------------------------- |
+| Why use delegates?     | To call methods dynamically, pass methods as args |
+| Delegate syntax        | `delegate returnType DelegateName(parameters);`   |
+| How to assign a method | `DelegateInstance = MethodName;`                  |
+| Call delegate          | `DelegateInstance(arguments);`                    |
+
+
+
+
+
+
+
+
+
+
+
+
+------------------------------------------------------------------------
+1. find element
+2. action
+3. asserstions
+
+- # Types of Testing
+- ### Smoke Testing:
+✅ 1. Smoke Testing (Is it even usable?)
+What it does: Checks if the basic parts of the application load and are visible.
+
+When it's done: After a new build is released — just to check if it’s even testable.
+
+Goal: To make sure the app is not broken at a high level.
+
+🧪 Example:
+
+Is the login page opening? Are buttons visible? Is the app loading without crashing?
+
+🟢 If basic UI is showing up → proceed to deeper testing
+🔴 If it's broken → send it back to developers
+- ###  Sanity Testing:
+✅ 2. Sanity Testing (Is the main feature working?)
+What it does: Quickly checks main features after a small code change or bug fix.
+
+When it's done: After minor changes to confirm if things work fine.
+
+Goal: Verify that core functionalities work as expected.
+
+🧪 Example:
+
+After fixing a login issue — is the login actually working now? Is the dashboard opening?
+
+🟢 Only checks specific features related to the change — not full app
+
+- ### Regression Testing:
+✅ 3. Regression Testing (Did we break anything else?)
+What it does: Checks if new changes broke existing features.
+
+When it's done: After any code change, bug fix, or feature addition.
+
+Goal: Ensure nothing else is broken due to the update.
+
+🧪 Example:
+
+After adding a new “Download Report” feature — is the Add User, Search, and Logout still working?
+
+🟢 Checks full application functionality
+
+-----------------------------------------------------------------------------------------------
+
+- types of testing:
+smoke- build release(JUSt the ui is visible or not)- if button visible or not
+regression- functionalty test - after button click - functionality and other functionality which inpmact this
+sanity - checks main functionality
+
+
+
+- Selenium
+- version 4.o
+- open source
+- 3 components:
+- web driver - automate ui scenariors/ web app
+- ide: record and generates code
+- grid: center point and node - segrates b/w nodes / distributes - used to decresed execution time
+------------------------------------------------------------
+- Launching browser
+- IWebdriver driver=new ChrmoeDriver();
+- hook files- before defination.
+- driver.Navigate() // gives 4 navigations like forward/ backward/referes/gotoUrl
+- Then
+- # 1. Find ELements:
+- loactors: 8
+- xpath,id,className, link text, partial link rext, css selector, Name,tagname.
+- ### XPath
+    - Absolute and Relative Xpath
+    - syntax: //tagName[@attribute='value']
+    - relative - current xpath (//)
+    - absolute - / ( identifies from root tag/parent)
+    - xpath -- axis - parent and child-ansector-preceding-following-  sibling-following sibling - preceding sibling
+    - actions: 
+    - quit/close: close- only one broswer
+    - quit- closes all the broswers related to the scrpit.
+    
+
+
+--------------------------------------------------------------------------------------------
+
+- ## Dynamic XPath:
+- xpath -- axis - parent and child-ansector-preceding-following-  sibling-following sibling - preceding sibling
+- //div[text()=""]//ancestor::div[@class=""]//following::div[@class=""]
+- //a[text()='Nifty 50']//ancestor::td//following-sibling::td[2]
+- Select Element class:
+- to handel drop downs.
+- //a[text()='KL Rahul']//parent::div//following-sibling::div[4]
+- //span[@id='productTitle']//ancestor::div[@class='centerColAlign']//descendant::span[@class='a-price-whole']--- amazon price findout
+- //span[text()='Apple iPhone 15 (128 GB) - Black']//ancestor::div[@class='puisg-col-inner']//descendant::span[@class='a-price-whole']
+
+-------------------------------------------------------------------------------------------------
+- # 
+- contains
+- normalizespace
+- starts with , ends with
+- ### Normalize space:
+- // div[normalize-space(text())='value];
+- //div[constains(attribut,'value)];
+- ### CSS Selector:
+- class -- .
+- id -- #
+- contains -- *
+- startswith -- ^
+- endswith -- $
+- [attribut='value'] // generall way, wihtout symbols
+- .valu // with class
+- #id // id
+----------------------------------------------------------------------------------------------------
+- # Actions class:
+- to perform more actions than click,clear and send keys.
+- Action action=new Action(driver);
+- move to element, drag and drop, double click etc.
+- Javascrpt exectuor is used for scrolling or move to element like when selenium actions doesn't work.
+- execute script
+- only used for 3 - color change
+- 
+
+- ### Handling  Alerts:
+- 3 types:
+- simple
+- promt
+- conformation
+- driver.switchto.alert()
+
+- ### Waits:
+- 3 types:
+- implicit wait, explict, fluent
+- 
+
+
+--------------------------------------------------------------------------------------
