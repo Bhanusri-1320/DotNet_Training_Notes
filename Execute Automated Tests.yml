@@ -1,0 +1,147 @@
+variables:
+  organizationUrl: $(System.TeamFoundationCollectionUri)
+  projectName: $(System.TeamProject)
+  personalAccessToken: $(PersonalAccessToken)
+  testRunResultsUrl: "$(organizationUrl)$(projectName)/_apis/test/runs?api-version=5.0"
+  testRunIdFilePath: "$(Build.ArtifactStagingDirectory)/TestRunId.txt"
+pool:
+    name: QAAUTOMATIONPOOL
+
+parameters:
+  - name: Browser
+    type: string
+    default: 'Chrome'
+    values:
+    - 'Edge'
+    - 'Chrome'
+  
+  - name: FilterBy
+    type: string
+    default: 'SmokeTest'
+    values:
+    - 'SmokeTest'
+    - 'FullRegression'
+    - 'Login'
+    - 'Home'
+    - 'Oil&Gas'
+    - 'Technology'
+    - 'Finance'
+    - 'Subscription'
+    - 'Retail'
+ 
+  - name: Scope
+    type: string
+    default: '3279'
+    values:
+    - '3278'
+    - '3357'
+    - '3326'
+    - '3309'
+    - '3308'
+    - '3307'
+    - '3306'
+    - '3305'
+    - '3304'
+    - '3303'
+    - '3302'
+    - '3279'
+  
+  - name: environment
+    type: string
+    default: 'QA'
+    values:
+    - 'QA'
+    - 'Dev'
+    - 'STAGING'
+
+stages:
+  - stage: Clean
+    jobs:
+    - job: CleanJob
+      steps:
+      - task: DeleteFiles@1
+        inputs:
+          SourceFolder: '$(Build.SourcesDirectory)'
+          Contents: '**/*'
+          RemoveSourceFolder: false
+
+  - stage: Checkout
+    jobs:
+    - job: CheckoutJob
+      steps:
+      - checkout: Self
+
+  - stage: NotifyTestExecution
+    jobs:
+    - job: NotifyTestExecutionJob
+      steps:
+      - script: echo "Notification - Test execution process started. Environment - $(EnvironmentName), Browser - $(Browser)"
+      - script: |
+          echo "Sending email notification..."
+          echo "To: $(NotifyEmailAddress)"
+          echo "Subject: Test Execution Started"
+          echo "Body: The test execution process has started for Environment- $(EnvironmentName) using Browser- $(Browser)."
+
+  - stage: ConfigureScope
+    jobs:
+    - job: ConfigureScopeJob
+      steps:
+        - script: echo 'Configuring test scope...'
+
+  - stage: ConfigureTestEnvironment
+    jobs:
+    - job: ConfigureTestEnvironmentJob
+      steps:
+      - script: echo 'Setting up test environment for $(EnvironmentName)...'
+      - ${{ if eq(variables['EnvironmentName'], 'QA') }}:
+        - script: echo 'Applying QA-specific configurations...''
+      - ${{ if eq(variables['EnvironmentName'], 'Production') }}:
+        - script: echo 'Applying Production-specific configurations...''
+
+  - stage: ConfigureBrowser
+    jobs:
+    - job: ConfigureBrowserJob
+      steps:
+      - script: echo "Configuring browser settings for $(Browser)..."
+      - ${{ if eq(variables['Browser'], 'Chrome') }}:
+        - script: echo "Setting up Chrome browser..."
+      - ${{ if eq(variables['Browser'], 'Firefox') }}:
+        - script: echo "Setting up Firefox browser..."
+
+  - stage: Build
+    jobs:
+    - job: BuildJob
+      steps:
+      - script: dotnet clean
+        displayName: 'Clean Solution'
+  - stage: Test
+    jobs:
+    - job: TestJob
+      steps:
+      - task: VSTest@3
+        displayName: 'Execute Tests'
+        inputs:
+          testSelector: testPlan
+          testPlan: 3277
+          testSuite: ${{ parameters.Scope }}
+          testConfiguration: 22
+          uiTests: true
+          rerunFailedTests: true
+          donotPublishTestResults: true
+      - task: PublishTestResults@2
+        displayName: 'Publish Test Results'
+        inputs:
+          testResultsFormat: 'NUnit' # Adjust this to match your test results format
+          testResultsFiles: '$(System.DefaultWorkingDirectory)/TestReports' # Adjust the pattern to match your test result files
+      - script: echo $(System.DefaultWorkingDirectory)
+
+  - stage: NotifyTestResults
+    jobs:
+    - job: NotifyTestResultsJob
+      steps:
+      - script: echo "Notification - Test results are available."
+        displayName: 'Notify Test Results'
+      - task: DownloadPipelineArtifact@2
+        displayName: 'Download Test Results Artifact'
+        inputs:
+          patterns: '**/*.html'

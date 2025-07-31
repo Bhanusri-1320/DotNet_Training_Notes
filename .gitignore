@@ -1,0 +1,24 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/.vs/PLSeleniumSpecFlowLivingDoc/DesignTimeBuild
+/.vs/PLSeleniumSpecFlowLivingDoc/FileContentIndex
+/.vs/PLSeleniumSpecFlowLivingDoc/v17/TestStore/0
+/.vs/PLSeleniumSpecFlowLivingDoc/v17/.futdcache.v2
+/.vs/PLSeleniumSpecFlowLivingDoc/v17/.suo
+/.vs/PLSeleniumSpecFlowLivingDoc/v17/.wsuo
+/.vs/PLSeleniumSpecFlowLivingDoc/v17/DocumentLayout.json
+/.vs/ProjectEvaluation
+/.vs/ProjectEvaluation/plseleniumspecflowlivingdoc.metadata.v8.bin
+/.vs/ProjectEvaluation/plseleniumspecflowlivingdoc.projects.v8.bin
+/.vs/ProjectEvaluation/plseleniumspecflowlivingdoc.strings.v8.bin
+/.vs/slnx.sqlite
+/.vs/VSWorkspaceState.json
+/bin/Debug/net6.0
+/obj
+/.vs/PLSeleniumSpecFlowLivingDoc/v17/DocumentLayout.backup.json
+/TestReports/ExtentSparkReporter.html
+/TestReports.zip
+/TestReports
+/TestReports/error_Remember Me checkbox_20240927_182237.png
