@@ -7973,3 +7973,78 @@ sanity - checks main functionality
 
 
 --------------------------------------------------------------------------------------
+- ### IFrames:
+- 
+ 
+
+iFrame: - 
+
+ 
+
+Certainly! In Selenium WebDriver using C#, handling iframes (inline frames) is essential when automating scenarios involving nested content within a web page. An iframe is an HTML document embedded inside another HTML document. Let’s explore how to handle iframes in C# Selenium: 
+
+ 
+
+Switching to an iFrame: 
+
+To interact with elements inside an iframe, you need to switch the WebDriver context to that iframe. 
+
+Use the driver.SwitchTo().Frame(frameLocator) method to switch to a specific iframe. 
+
+// Locate the iframe element (by ID, name, or other locators) 
+
+IWebElement iframeElement = driver.FindElement(By.Id("myIframe")); 
+
+ 
+
+// Switch to the iframe 
+
+driver.SwitchTo().Frame(iframeElement); 
+
+ 
+
+// Now you can interact with elements inside the iframe 
+
+// ... 
+
+ 
+
+// Switch back to the main content (outside the iframe) 
+
+driver.SwitchTo().DefaultContent(); 
+
+
+- ### WIndow Handles:
+- driver.windowhandle returns readonlyCollection.
+- 
+
+- ### Assertions:
+- validations
+- using explict wait is element visible
+- or isDisplayed
+- assert - hard  -> 
+- istrue,equalto, 
+
+
+
+
+
+--------------------------------------------------------------
+- # FrameWork:
+- 
+
+-----------------------------------------------------
+- # Parallel Execution:
+- Scenario context:
+- want to pass some value to anither scenario
+- 
+
+
+
+
+
+
+
+
+
+------------------------------------------------------------------------------------------
